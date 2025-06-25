@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Activity, 
@@ -12,17 +13,19 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboard', icon: LayoutDashboard, current: true },
-  { name: 'Transactions', icon: Activity, current: false },
-  { name: 'Rules Engine', icon: Shield, current: false },
-  { name: 'Alerts & Cases', icon: AlertTriangle, current: false },
-  { name: 'Customer Profiles', icon: Users, current: false },
-  { name: 'Reports', icon: FileText, current: false },
-  { name: 'Analytics', icon: TrendingUp, current: false },
-  { name: 'Settings', icon: Settings, current: false },
+  { name: 'Dashboard', icon: LayoutDashboard, href: '/' },
+  { name: 'Transactions', icon: Activity, href: '/transactions' },
+  { name: 'Rules Engine', icon: Shield, href: '/rules' },
+  { name: 'Alerts & Cases', icon: AlertTriangle, href: '/alerts' },
+  { name: 'Customer Profiles', icon: Users, href: '/customers' },
+  { name: 'Reports', icon: FileText, href: '/reports' },
+  { name: 'Analytics', icon: TrendingUp, href: '/analytics' },
+  { name: 'Settings', icon: Settings, href: '/settings' },
 ];
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <div className="flex h-screen w-64 flex-col bg-slate-900 border-r border-slate-700">
       {/* Logo */}
@@ -42,13 +45,14 @@ const Sidebar = () => {
       <nav className="flex-1 px-4 py-6 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
+          const isActive = location.pathname === item.href;
           return (
-            <a
+            <Link
               key={item.name}
-              href="#"
+              to={item.href}
               className={`
                 group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                ${item.current 
+                ${isActive 
                   ? 'bg-blue-600 text-white shadow-lg' 
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                 }
@@ -56,7 +60,7 @@ const Sidebar = () => {
             >
               <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
               {item.name}
-            </a>
+            </Link>
           );
         })}
       </nav>
