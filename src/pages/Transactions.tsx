@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Search, 
@@ -11,6 +10,8 @@ import {
   Shield
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import TransactionDetail from '../components/TransactionDetail';
+import ExportUtility from '../components/ExportUtility';
 
 const transactions = [
   {
@@ -54,6 +55,8 @@ const transactions = [
 const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -80,6 +83,30 @@ const Transactions = () => {
     return 'text-green-400';
   };
 
+  const handleViewTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction);
+  };
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    const filtered = transactions.filter(t => 
+      t.customer.toLowerCase().includes(term.toLowerCase()) ||
+      t.id.toLowerCase().includes(term.toLowerCase()) ||
+      t.amount.includes(term)
+    );
+    setFilteredTransactions(filtered);
+  };
+
+  const handleStatusFilter = (status: string) => {
+    setStatusFilter(status);
+    if (status === 'all') {
+      setFilteredTransactions(transactions);
+    } else {
+      const filtered = transactions.filter(t => t.status === status);
+      setFilteredTransactions(filtered);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-slate-950">
       <Sidebar />
@@ -93,10 +120,11 @@ const Transactions = () => {
               <p className="text-slate-400 mt-1">Real-time transaction analysis and risk assessment</p>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                <Download className="h-4 w-4" />
-                <span>Export</span>
-              </button>
+              <ExportUtility 
+                data={filteredTransactions} 
+                filename="transactions" 
+                type="transactions"
+              />
             </div>
           </div>
         </header>
@@ -110,13 +138,13 @@ const Transactions = () => {
                 type="text"
                 placeholder="Search transactions..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => handleStatusFilter(e.target.value)}
               className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Status</option>
@@ -148,7 +176,7 @@ const Transactions = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700">
-                  {transactions.map((transaction) => (
+                  {filteredTransactions.map((transaction) => (
                     <tr key={transaction.id} className="hover:bg-slate-700/30 transition-colors">
                       <td className="px-6 py-4">
                         <div>
@@ -187,7 +215,10 @@ const Transactions = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <button className="flex items-center space-x-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors">
+                        <button 
+                          onClick={() => handleViewTransaction(transaction)}
+                          className="flex items-center space-x-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                        >
                           <Eye className="h-3 w-3" />
                           <span>View</span>
                         </button>
@@ -200,6 +231,14 @@ const Transactions = () => {
           </div>
         </main>
       </div>
+
+      {/* Transaction Detail Modal */}
+      {selectedTransaction && (
+        <TransactionDetail
+          transaction={selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+        />
+      )}
     </div>
   );
 };

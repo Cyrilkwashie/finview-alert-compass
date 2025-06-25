@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   AlertTriangle, 
@@ -11,6 +10,8 @@ import {
   Filter
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import AlertInvestigation from '../components/AlertInvestigation';
+import ExportUtility from '../components/ExportUtility';
 
 const alerts = [
   {
@@ -70,6 +71,8 @@ const alerts = [
 const Alerts = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
+  const [selectedAlert, setSelectedAlert] = useState(null);
+  const [filteredAlerts, setFilteredAlerts] = useState(alerts);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -100,6 +103,34 @@ const Alerts = () => {
     }
   };
 
+  const handleInvestigate = (alert: any) => {
+    setSelectedAlert(alert);
+  };
+
+  const handleStatusFilter = (status: string) => {
+    setStatusFilter(status);
+    applyFilters(status, priorityFilter);
+  };
+
+  const handlePriorityFilter = (priority: string) => {
+    setPriorityFilter(priority);
+    applyFilters(statusFilter, priority);
+  };
+
+  const applyFilters = (status: string, priority: string) => {
+    let filtered = [...alerts];
+    
+    if (status !== 'all') {
+      filtered = filtered.filter(alert => alert.status === status);
+    }
+    
+    if (priority !== 'all') {
+      filtered = filtered.filter(alert => alert.priority === priority);
+    }
+    
+    setFilteredAlerts(filtered);
+  };
+
   return (
     <div className="flex h-screen bg-slate-950">
       <Sidebar />
@@ -113,9 +144,14 @@ const Alerts = () => {
               <p className="text-slate-400 mt-1">Monitor and investigate compliance alerts</p>
             </div>
             <div className="flex items-center space-x-4">
+              <ExportUtility 
+                data={filteredAlerts} 
+                filename="alerts" 
+                type="alerts"
+              />
               <div className="flex items-center space-x-2 bg-slate-800 px-3 py-2 rounded-lg">
                 <div className="h-2 w-2 bg-red-400 rounded-full animate-pulse"></div>
-                <span className="text-sm text-red-400 font-medium">4 Open Alerts</span>
+                <span className="text-sm text-red-400 font-medium">{filteredAlerts.filter(a => a.status === 'open').length} Open Alerts</span>
               </div>
             </div>
           </div>
@@ -126,7 +162,7 @@ const Alerts = () => {
           <div className="flex items-center space-x-4">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => handleStatusFilter(e.target.value)}
               className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Status</option>
@@ -137,7 +173,7 @@ const Alerts = () => {
             </select>
             <select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
+              onChange={(e) => handlePriorityFilter(e.target.value)}
               className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Priority</option>
@@ -156,7 +192,7 @@ const Alerts = () => {
         {/* Alerts List */}
         <main className="flex-1 overflow-y-auto p-6">
           <div className="space-y-4">
-            {alerts.map((alert) => (
+            {filteredAlerts.map((alert) => (
               <div key={alert.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -213,7 +249,10 @@ const Alerts = () => {
                       <MessageSquare className="h-4 w-4" />
                       <span className="text-sm">{alert.comments}</span>
                     </div>
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <button 
+                      onClick={() => handleInvestigate(alert)}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    >
                       Investigate
                     </button>
                   </div>
@@ -223,6 +262,14 @@ const Alerts = () => {
           </div>
         </main>
       </div>
+
+      {/* Alert Investigation Modal */}
+      {selectedAlert && (
+        <AlertInvestigation
+          alert={selectedAlert}
+          onClose={() => setSelectedAlert(null)}
+        />
+      )}
     </div>
   );
 };
