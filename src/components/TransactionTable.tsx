@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AlertTriangle, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
 import TransactionDetail from './TransactionDetail';
@@ -5,14 +6,20 @@ import { mockTransactions } from '../data/mockData';
 
 interface TransactionTableProps {
   showOnlyFlagged?: boolean;
+  limit?: number;
 }
 
-const TransactionTable = ({ showOnlyFlagged = true }: TransactionTableProps) => {
+const TransactionTable = ({ showOnlyFlagged = true, limit }: TransactionTableProps) => {
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
-  const filteredTransactions = showOnlyFlagged 
+  let filteredTransactions = showOnlyFlagged 
     ? mockTransactions.filter(t => t.status === 'flagged')
     : mockTransactions;
+
+  // Apply limit if specified (for dashboard recent transactions)
+  if (limit) {
+    filteredTransactions = filteredTransactions.slice(0, limit);
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -45,7 +52,7 @@ const TransactionTable = ({ showOnlyFlagged = true }: TransactionTableProps) => 
       customer: transaction.customer,
       amount: `$${transaction.amount.toLocaleString()}`,
       type: transaction.type,
-      time: transaction.date.split(' ')[1],
+      time: transaction.date.split(' ')[1] || '00:00',
       date: transaction.date.split(' ')[0],
       riskScore: transaction.riskScore,
       status: transaction.status,
@@ -61,7 +68,7 @@ const TransactionTable = ({ showOnlyFlagged = true }: TransactionTableProps) => 
         <div className="px-6 py-4 border-b border-slate-700">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-white">
-              {showOnlyFlagged ? 'Flagged Transactions' : 'Recent Transactions'}
+              {limit ? 'Recent Flagged Transactions' : (showOnlyFlagged ? 'Flagged Transactions' : 'Recent Transactions')}
             </h3>
             <div className="flex items-center space-x-2">
               <button className="px-3 py-1 text-sm bg-slate-700 text-slate-300 rounded-md hover:bg-slate-600 transition-colors">

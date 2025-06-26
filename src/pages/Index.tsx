@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   AlertTriangle, 
@@ -121,8 +122,8 @@ const Index = () => {
             />
           </div>
 
-          {/* Transaction Table */}
-          <TransactionTable showOnlyFlagged={true} />
+          {/* Transaction Table - Show only last 5 flagged transactions */}
+          <TransactionTable showOnlyFlagged={true} limit={5} />
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

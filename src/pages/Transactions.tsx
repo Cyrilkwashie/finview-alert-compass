@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Search, 
@@ -53,7 +54,7 @@ const Transactions = () => {
       customer: transaction.customer,
       amount: `$${transaction.amount.toLocaleString()}`,
       type: transaction.type,
-      time: transaction.date.split(' ')[1],
+      time: transaction.date.split(' ')[1] || '00:00',
       date: transaction.date.split(' ')[0],
       riskScore: transaction.riskScore,
       status: transaction.status,
@@ -149,7 +150,7 @@ const Transactions = () => {
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-white">{transaction.id}</div>
-                          <div className="text-xs text-slate-400">{transaction.date} {transaction.time}</div>
+                          <div className="text-xs text-slate-400">{transaction.date}</div>
                           <div className="text-xs text-slate-500">{transaction.type}</div>
                         </div>
                       </td>
@@ -158,7 +159,7 @@ const Transactions = () => {
                         <div className="text-xs text-slate-400">{transaction.country}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-white">{transaction.amount}</div>
+                        <div className="text-sm font-medium text-white">${transaction.amount.toLocaleString()}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className={`text-sm font-bold ${getRiskScoreColor(transaction.riskScore)}`}>
