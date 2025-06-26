@@ -42,10 +42,10 @@ const generateCustomerProfiles = () => {
 
     // Generate flags based on rules and risk level
     const flags = [];
-    if (uniqueRules.some(rule => rule.includes('PEP'))) flags.push('PEP');
-    if (uniqueRules.some(rule => rule.includes('Sanctions'))) flags.push('Sanctions List');
-    if (uniqueRules.some(rule => rule.includes('High Risk Country'))) flags.push('High Risk Country');
-    if (uniqueRules.some(rule => rule.includes('Structuring'))) flags.push('Structuring Pattern');
+    if (uniqueRules.some(rule => (rule as string).includes('PEP'))) flags.push('PEP');
+    if (uniqueRules.some(rule => (rule as string).includes('Sanctions'))) flags.push('Sanctions List');
+    if (uniqueRules.some(rule => (rule as string).includes('High Risk Country'))) flags.push('High Risk Country');
+    if (uniqueRules.some(rule => (rule as string).includes('Structuring'))) flags.push('Structuring Pattern');
     if (avgRiskScore >= 85) flags.push('High Risk Customer');
 
     return {
