@@ -1,70 +1,13 @@
 import React, { useState } from 'react';
 import { AlertTriangle, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
 import TransactionDetail from './TransactionDetail';
-
-interface Transaction {
-  id: string;
-  customer: string;
-  amount: number;
-  date: string;
-  riskScore: number;
-  status: 'flagged' | 'cleared' | 'under_review';
-  rules: string[];
-}
-
-const mockTransactions: Transaction[] = [
-  {
-    id: 'TX-2024-001',
-    customer: 'John Anderson',
-    amount: 15000,
-    date: '2024-01-15 14:32',
-    riskScore: 85,
-    status: 'flagged',
-    rules: ['Structuring', 'High Amount']
-  },
-  {
-    id: 'TX-2024-002',
-    customer: 'Maria Gonzalez',
-    amount: 2500,
-    date: '2024-01-15 13:45',
-    riskScore: 35,
-    status: 'cleared',
-    rules: []
-  },
-  {
-    id: 'TX-2024-003',
-    customer: 'Robert Chen',
-    amount: 45000,
-    date: '2024-01-15 12:18',
-    riskScore: 92,
-    status: 'under_review',
-    rules: ['Suspicious Pattern', 'Geographic Risk', 'PEP']
-  },
-  {
-    id: 'TX-2024-004',
-    customer: 'Sarah Williams',
-    amount: 8750,
-    date: '2024-01-15 11:22',
-    riskScore: 58,
-    status: 'under_review',
-    rules: ['Velocity Check']
-  },
-  {
-    id: 'TX-2024-005',
-    customer: 'Ahmed Hassan',
-    amount: 125000,
-    date: '2024-01-15 10:55',
-    riskScore: 98,
-    status: 'flagged',
-    rules: ['Large Transaction', 'Sanctions List', 'Layering']
-  }
-];
+import { mockTransactions } from '../data/mockData';
 
 interface TransactionTableProps {
   showOnlyFlagged?: boolean;
 }
 
-const TransactionTable = ({ showOnlyFlagged = false }: TransactionTableProps) => {
+const TransactionTable = ({ showOnlyFlagged = true }: TransactionTableProps) => {
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   const filteredTransactions = showOnlyFlagged 
@@ -95,19 +38,19 @@ const TransactionTable = ({ showOnlyFlagged = false }: TransactionTableProps) =>
     return 'text-green-400 bg-green-900/20';
   };
 
-  const handleViewTransaction = (transaction: Transaction) => {
+  const handleViewTransaction = (transaction: any) => {
     // Convert transaction to match TransactionDetail interface
     const detailTransaction = {
       id: transaction.id,
       customer: transaction.customer,
       amount: `$${transaction.amount.toLocaleString()}`,
-      type: 'Wire Transfer',
+      type: transaction.type,
       time: transaction.date.split(' ')[1],
       date: transaction.date.split(' ')[0],
       riskScore: transaction.riskScore,
       status: transaction.status,
       rules: transaction.rules,
-      country: 'USA'
+      country: transaction.country
     };
     setSelectedTransaction(detailTransaction);
   };

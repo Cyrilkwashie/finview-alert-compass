@@ -12,52 +12,14 @@ import {
 import Sidebar from '../components/Sidebar';
 import TransactionDetail from '../components/TransactionDetail';
 import ExportUtility from '../components/ExportUtility';
-
-const transactions = [
-  {
-    id: 'TXN-2024-001547',
-    customer: 'Ahmed Hassan',
-    amount: '$125,000',
-    type: 'Wire Transfer',
-    time: '14:23:45',
-    date: '2024-01-15',
-    riskScore: 87,
-    status: 'flagged',
-    rules: ['Large Amount', 'PEP Match'],
-    country: 'UAE'
-  },
-  {
-    id: 'TXN-2024-001545',
-    customer: 'John Smith',
-    amount: '$9,800',
-    type: 'Card Payment',
-    time: '12:15:33',
-    date: '2024-01-15',
-    riskScore: 68,
-    status: 'flagged',
-    rules: ['Structuring Pattern'],
-    country: 'USA'
-  },
-  {
-    id: 'TXN-2024-001548',
-    customer: 'Robert Chen',
-    amount: '$45,000',
-    type: 'Wire Transfer',
-    time: '16:45:22',
-    date: '2024-01-15',
-    riskScore: 92,
-    status: 'flagged',
-    rules: ['Suspicious Pattern', 'Geographic Risk'],
-    country: 'China'
-  }
-];
+import { mockTransactions } from '../data/mockData';
 
 const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('flagged');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [filteredTransactions, setFilteredTransactions] = useState(
-    transactions.filter(t => t.status === 'flagged')
+    mockTransactions.filter(t => t.status === 'flagged')
   );
 
   const getStatusIcon = (status: string) => {
@@ -86,23 +48,35 @@ const Transactions = () => {
   };
 
   const handleViewTransaction = (transaction: any) => {
-    setSelectedTransaction(transaction);
+    const detailTransaction = {
+      id: transaction.id,
+      customer: transaction.customer,
+      amount: `$${transaction.amount.toLocaleString()}`,
+      type: transaction.type,
+      time: transaction.date.split(' ')[1],
+      date: transaction.date.split(' ')[0],
+      riskScore: transaction.riskScore,
+      status: transaction.status,
+      rules: transaction.rules,
+      country: transaction.country
+    };
+    setSelectedTransaction(detailTransaction);
   };
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    const baseData = transactions.filter(t => t.status === 'flagged');
+    const baseData = mockTransactions.filter(t => t.status === 'flagged');
     const filtered = baseData.filter(t => 
       t.customer.toLowerCase().includes(term.toLowerCase()) ||
       t.id.toLowerCase().includes(term.toLowerCase()) ||
-      t.amount.includes(term)
+      t.amount.toString().includes(term)
     );
     setFilteredTransactions(filtered);
   };
 
   const handleStatusFilter = (status: string) => {
     setStatusFilter(status);
-    const baseData = transactions.filter(t => t.status === 'flagged');
+    const baseData = mockTransactions.filter(t => t.status === 'flagged');
     if (status === 'all') {
       setFilteredTransactions(baseData);
     } else {

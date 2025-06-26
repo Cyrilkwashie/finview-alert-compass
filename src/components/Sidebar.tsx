@@ -1,77 +1,77 @@
-
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
-  Activity, 
+  BarChart3, 
   Shield, 
   AlertTriangle, 
+  CreditCard, 
   Users, 
-  FileText,
+  FileText, 
+  Settings, 
   TrendingUp,
-  Settings 
+  Filter
 } from 'lucide-react';
 
-const navigation = [
-  { name: 'Dashboard', icon: LayoutDashboard, href: '/' },
-  { name: 'Transactions', icon: Activity, href: '/transactions' },
-  { name: 'Rules Engine', icon: Shield, href: '/rules' },
-  { name: 'Alerts & Cases', icon: AlertTriangle, href: '/alerts' },
-  { name: 'Customer Profiles', icon: Users, href: '/customers' },
-  { name: 'Reports', icon: FileText, href: '/reports' },
-  { name: 'Analytics', icon: TrendingUp, href: '/analytics' },
-  { name: 'Settings', icon: Settings, href: '/settings' },
-];
-
 const Sidebar = () => {
-  const location = useLocation();
+  const navItems = [
+    { name: 'Dashboard', href: '/', icon: BarChart3 },
+    { name: 'Flagged Transactions', href: '/transactions', icon: CreditCard },
+    { name: 'Transactions by Rule', href: '/transactions-by-rule', icon: Filter },
+    { name: 'Alerts', href: '/alerts', icon: AlertTriangle },
+    { name: 'Rules Engine', href: '/rules', icon: Shield },
+    { name: 'Customer Profiles', href: '/customers', icon: Users },
+    { name: 'Reports', href: '/reports', icon: FileText },
+    { name: 'Analytics', href: '/analytics', icon: TrendingUp },
+    { name: 'Settings', href: '/settings', icon: Settings },
+  ];
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-slate-900 border-r border-slate-700">
+    <div className="w-64 bg-slate-900 border-r border-slate-700 flex flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center px-6 bg-slate-800 border-b border-slate-700">
+      <div className="p-6 border-b border-slate-700">
         <div className="flex items-center space-x-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Shield className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-white">TxAnalyzer</h1>
-            <p className="text-xs text-slate-400">Compliance Suite</p>
+            <h1 className="text-xl font-bold text-white">FinSecure</h1>
+            <p className="text-xs text-slate-400">AML Compliance</p>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={`
-                group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                ${isActive 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+      <nav className="flex-1 p-4">
+        <ul className="space-y-2">
+          {navItems.map((item) => (
+            <li key={item.name}>
+              <NavLink
+                to={item.href}
+                className={({ isActive }) =>
+                  `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  }`
                 }
-              `}
-            >
-              <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
-              {item.name}
-            </Link>
-          );
-        })}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="text-sm font-medium">{item.name}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </nav>
 
       {/* Footer */}
       <div className="p-4 border-t border-slate-700">
         <div className="flex items-center space-x-3">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+          <div className="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center">
+            <span className="text-xs font-medium text-slate-300">JD</span>
+          </div>
           <div>
-            <p className="text-sm font-medium text-white">Compliance Officer</p>
-            <p className="text-xs text-slate-400">admin@company.com</p>
+            <p className="text-sm font-medium text-white">John Doe</p>
+            <p className="text-xs text-slate-400">Compliance Officer</p>
           </div>
         </div>
       </div>
