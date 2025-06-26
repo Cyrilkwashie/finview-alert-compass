@@ -21,18 +21,18 @@ const Index = () => {
       
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-slate-900 border-b border-slate-700 px-6 py-4">
-          <div className="flex items-center justify-between">
+        <header className="bg-slate-900 border-b border-slate-700 px-4 md:px-6 py-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Transaction Monitoring Dashboard</h1>
-              <p className="text-slate-400 mt-1">Real-time compliance monitoring and risk analysis</p>
+              <h1 className="text-xl md:text-2xl font-bold text-white">Transaction Monitoring Dashboard</h1>
+              <p className="text-slate-400 mt-1 text-sm md:text-base">Real-time compliance monitoring and risk analysis</p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="flex items-center space-x-2 bg-slate-800 px-3 py-2 rounded-lg">
                 <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-sm text-green-400 font-medium">Live Monitoring</span>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <p className="text-sm text-white font-medium">January 15, 2024</p>
                 <p className="text-xs text-slate-400">Last updated: 2 min ago</p>
               </div>
@@ -41,9 +41,9 @@ const Index = () => {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6 space-y-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <KPICard
               title="Flagged Transactions"
               value="47"
@@ -83,7 +83,7 @@ const Index = () => {
           </div>
 
           {/* Secondary KPI Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <KPICard
               title="Total Transactions"
               value="2,847"
@@ -126,44 +126,44 @@ const Index = () => {
           <TransactionTable showOnlyFlagged={true} limit={5} />
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
               <h3 className="text-lg font-semibold text-white mb-4">Recent Alerts</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-red-900/20 border border-red-800 rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <AlertTriangle className="h-5 w-5 text-red-400" />
-                    <div>
-                      <p className="text-sm font-medium text-white">Suspicious Pattern Detected</p>
-                      <p className="text-xs text-slate-400">Customer: Ahmed Hassan</p>
+                    <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-white truncate">Suspicious Pattern Detected</p>
+                      <p className="text-xs text-slate-400 truncate">Customer: Ahmed Hassan</p>
                     </div>
                   </div>
-                  <span className="text-xs text-red-300">2 min ago</span>
+                  <span className="text-xs text-red-300 flex-shrink-0">2 min ago</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-yellow-900/20 border border-yellow-800 rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5 text-yellow-400" />
-                    <div>
-                      <p className="text-sm font-medium text-white">Large Transaction Review</p>
-                      <p className="text-xs text-slate-400">Amount: $125k</p>
+                    <Clock className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-white truncate">Large Transaction Review</p>
+                      <p className="text-xs text-slate-400 truncate">Amount: $125k</p>
                     </div>
                   </div>
-                  <span className="text-xs text-yellow-300">5 min ago</span>
+                  <span className="text-xs text-yellow-300 flex-shrink-0">5 min ago</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-orange-900/20 border border-orange-800 rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5 text-orange-400" />
-                    <div>
-                      <p className="text-sm font-medium text-white">PEP Match Found</p>
-                      <p className="text-xs text-slate-400">Requires immediate review</p>
+                    <Users className="h-5 w-5 text-orange-400 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-white truncate">PEP Match Found</p>
+                      <p className="text-xs text-slate-400 truncate">Requires immediate review</p>
                     </div>
                   </div>
-                  <span className="text-xs text-orange-300">12 min ago</span>
+                  <span className="text-xs text-orange-300 flex-shrink-0">12 min ago</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
               <h3 className="text-lg font-semibold text-white mb-4">Risk Distribution</h3>
               <div className="space-y-4">
                 <div>
