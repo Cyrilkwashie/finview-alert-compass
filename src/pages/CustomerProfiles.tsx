@@ -13,69 +13,63 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import CustomerProfileDetail from '../components/CustomerProfileDetail';
+import { mockTransactions } from '../data/mockData';
 
-const customers = [
-  {
-    id: 'CUST-001',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.hassan@email.com',
-    riskScore: 87,
-    riskLevel: 'High',
-    country: 'UAE',
-    accountType: 'Business',
-    onboardingDate: '2023-08-15',
-    totalTransactions: 156,
-    totalVolume: '$2.4M',
-    flaggedTransactions: 12,
-    lastActivity: '2 hours ago',
-    flags: ['PEP', 'High Risk Country']
-  },
-  {
-    id: 'CUST-002',
-    name: 'Maria Rodriguez',
-    email: 'maria.rodriguez@email.com',
-    riskScore: 34,
-    riskLevel: 'Low',
-    country: 'USA',
-    accountType: 'Personal',
-    onboardingDate: '2022-03-10',
-    totalTransactions: 89,
-    totalVolume: '$145K',
-    flaggedTransactions: 0,
-    lastActivity: '1 day ago',
-    flags: []
-  },
-  {
-    id: 'CUST-003',
-    name: 'Viktor Petrov',
-    email: 'viktor.petrov@email.com',
-    riskScore: 95,
-    riskLevel: 'Critical',
-    country: 'Russia',
-    accountType: 'Business',
-    onboardingDate: '2023-11-22',
-    totalTransactions: 45,
-    totalVolume: '$890K',
-    flaggedTransactions: 8,
-    lastActivity: '30 min ago',
-    flags: ['PEP', 'Sanctions List', 'High Risk Country']
-  },
-  {
-    id: 'CUST-004',
-    name: 'John Smith',
-    email: 'john.smith@email.com',
-    riskScore: 52,
-    riskLevel: 'Medium',
-    country: 'USA',
-    accountType: 'Personal',
-    onboardingDate: '2021-07-05',
-    totalTransactions: 234,
-    totalVolume: '$67K',
-    flaggedTransactions: 3,
-    lastActivity: '5 hours ago',
-    flags: ['Structuring Pattern']
-  }
-];
+// Generate customer data based on flagged transactions
+const generateCustomerProfiles = () => {
+  const flaggedTransactions = mockTransactions.filter(t => t.status === 'flagged');
+  const customerMap = new Map();
+
+  // Group transactions by customer
+  flaggedTransactions.forEach(transaction => {
+    if (!customerMap.has(transaction.customer)) {
+      customerMap.set(transaction.customer, []);
+    }
+    customerMap.get(transaction.customer).push(transaction);
+  });
+
+  // Create customer profiles
+  const customers = Array.from(customerMap.entries()).map(([customerName, transactions], index) => {
+    const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+    const avgRiskScore = Math.round(transactions.reduce((sum, t) => sum + t.riskScore, 0) / transactions.length);
+    const uniqueRules = [...new Set(transactions.flatMap(t => t.rules))];
+    
+    // Determine risk level based on average risk score
+    let riskLevel = 'Low';
+    if (avgRiskScore >= 90) riskLevel = 'Critical';
+    else if (avgRiskScore >= 75) riskLevel = 'High';
+    else if (avgRiskScore >= 50) riskLevel = 'Medium';
+
+    // Generate flags based on rules and risk level
+    const flags = [];
+    if (uniqueRules.some(rule => rule.includes('PEP'))) flags.push('PEP');
+    if (uniqueRules.some(rule => rule.includes('Sanctions'))) flags.push('Sanctions List');
+    if (uniqueRules.some(rule => rule.includes('High Risk Country'))) flags.push('High Risk Country');
+    if (uniqueRules.some(rule => rule.includes('Structuring'))) flags.push('Structuring Pattern');
+    if (avgRiskScore >= 85) flags.push('High Risk Customer');
+
+    return {
+      id: `CUST-${String(index + 1).padStart(3, '0')}`,
+      name: customerName,
+      email: `${customerName.toLowerCase().replace(/\s+/g, '.')}.${Math.floor(Math.random() * 1000)}@email.com`,
+      riskScore: avgRiskScore,
+      riskLevel,
+      country: transactions[0].country,
+      accountType: Math.random() > 0.6 ? 'Business' : 'Personal',
+      onboardingDate: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000 * 2).toISOString().split('T')[0],
+      totalTransactions: transactions.length + Math.floor(Math.random() * 150),
+      totalVolume: totalAmount > 1000000 ? `$${(totalAmount / 1000000).toFixed(1)}M` : `$${Math.round(totalAmount / 1000)}K`,
+      flaggedTransactions: transactions.length,
+      lastActivity: `${Math.floor(Math.random() * 48)} ${Math.random() > 0.5 ? 'hours' : 'minutes'} ago`,
+      flags
+    };
+  });
+
+  // Sort by risk score descending
+  return customers.sort((a, b) => b.riskScore - a.riskScore);
+};
+
+const customers = generateCustomerProfiles();
 
 const CustomerProfiles = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -102,6 +96,16 @@ const CustomerProfiles = () => {
     setSelectedCustomer(customer);
   };
 
+  const filteredCustomers = customers.filter(customer => {
+    const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         customer.id.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesRisk = riskFilter === 'all' || customer.riskLevel.toLowerCase() === riskFilter;
+    
+    return matchesSearch && matchesRisk;
+  });
+
   return (
     <>
       <div className="flex h-screen bg-slate-950">
@@ -113,12 +117,15 @@ const CustomerProfiles = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-white">Customer Risk Profiles</h1>
-                <p className="text-slate-400 mt-1">Dynamic risk assessment and customer monitoring</p>
+                <p className="text-slate-400 mt-1">Customers with flagged transactions and risk assessment</p>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="text-right">
-                  <p className="text-sm text-white font-medium">Total Customers: 1,247</p>
-                  <p className="text-xs text-slate-400">High Risk: 89 | Critical: 23</p>
+                  <p className="text-sm text-white font-medium">High-Risk Customers: {customers.length}</p>
+                  <p className="text-xs text-slate-400">
+                    Critical: {customers.filter(c => c.riskLevel === 'Critical').length} | 
+                    High: {customers.filter(c => c.riskLevel === 'High').length}
+                  </p>
                 </div>
               </div>
             </div>
@@ -154,7 +161,7 @@ const CustomerProfiles = () => {
           {/* Customer Grid */}
           <main className="flex-1 overflow-y-auto p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {customers.map((customer) => (
+              {filteredCustomers.map((customer) => (
                 <div key={customer.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -261,6 +268,14 @@ const CustomerProfiles = () => {
                 </div>
               ))}
             </div>
+
+            {filteredCustomers.length === 0 && (
+              <div className="text-center py-12">
+                <Users className="h-16 w-16 text-slate-600 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-white mb-2">No customers found</h3>
+                <p className="text-slate-400">Try adjusting your search criteria or filters.</p>
+              </div>
+            )}
           </main>
         </div>
       </div>

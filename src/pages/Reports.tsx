@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   FileText, 
@@ -107,23 +106,9 @@ const Reports = () => {
   };
 
   const handleDownloadReport = (report: any) => {
-    // Simulate report download
-    const reportContent = `
-${report.title}
-Report ID: ${report.id}
-Period: ${report.period}
-Status: ${report.status}
-Due Date: ${report.dueDate}
-Total Transactions: ${report.transactions}
-Total Amount: ${report.totalAmount}
-${report.submittedBy ? `Submitted By: ${report.submittedBy}` : ''}
-${report.filingDate ? `Filing Date: ${report.filingDate}` : ''}
-
-Description: ${report.description}
-
-This is a sample regulatory report. In a real application, this would contain detailed transaction data and compliance information.
-    `;
-
+    // Generate detailed report content
+    const reportContent = generateReportContent(report);
+    
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -133,6 +118,117 @@ This is a sample regulatory report. In a real application, this would contain de
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const generateReportContent = (report: any) => {
+    const currentDate = new Date().toLocaleString();
+    
+    return `
+REGULATORY COMPLIANCE REPORT
+${report.title}
+Report ID: ${report.id}
+Report Type: ${report.type}
+
+REPORT SUMMARY
+==============
+Filing Period: ${report.period}
+Report Status: ${report.status.toUpperCase()}
+Due Date: ${report.dueDate}
+${report.filingDate ? `Filing Date: ${report.filingDate}` : 'Not yet filed'}
+${report.submittedBy ? `Submitted By: ${report.submittedBy}` : 'Pending submission'}
+Generated On: ${currentDate}
+
+TRANSACTION SUMMARY
+==================
+Total Transactions Reviewed: ${report.transactions}
+Total Transaction Amount: ${report.totalAmount}
+Average Transaction Size: ${(parseFloat(report.totalAmount.replace(/[$,KM]/g, '')) * (report.totalAmount.includes('M') ? 1000000 : report.totalAmount.includes('K') ? 1000 : 1) / report.transactions).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+
+DETAILED ANALYSIS
+================
+${report.type === 'CTR' ? `
+Currency Transaction Report Details:
+- Cash transactions exceeding $10,000 reporting threshold
+- All transactions involve US currency
+- Verification of customer identity completed
+- Business justification documented for each transaction
+- No structuring patterns detected
+
+High-Value Transactions Breakdown:
+- Wire Transfers: 23 transactions ($${(Math.random() * 800000 + 200000).toFixed(0)})
+- Cash Deposits: 15 transactions ($${(Math.random() * 600000 + 150000).toFixed(0)})
+- Cash Withdrawals: 9 transactions ($${(Math.random() * 400000 + 100000).toFixed(0)})
+
+Customer Demographics:
+- Business Accounts: 65%
+- Individual Accounts: 35%
+- High-Net-Worth Individuals: 12%
+- Foreign Nationals: 8%
+` : report.type === 'SAR' ? `
+Suspicious Activity Report Details:
+- Unusual transaction patterns identified
+- Enhanced due diligence procedures initiated
+- Customer behavior analysis completed
+- Geographic risk assessment conducted
+
+Suspicious Activity Categories:
+- Structuring/Smurfing: 4 cases
+- Unusual Geographic Activity: 3 cases
+- High-Risk Customer Activity: 3 cases
+- Technology-Related Suspicious Activity: 2 cases
+
+Investigation Summary:
+- Customer interviews conducted: ${Math.floor(Math.random() * 8) + 5}
+- Additional documentation reviewed: ${Math.floor(Math.random() * 20) + 15} documents
+- External database searches: Completed
+- Law enforcement consultation: ${Math.random() > 0.5 ? 'Initiated' : 'Not required'}
+` : `
+Large Cash Transaction Report Details:
+- Transactions meeting large cash reporting criteria
+- Enhanced customer identification procedures
+- Source of funds verification completed
+- Compliance with local regulatory requirements
+
+Transaction Categories:
+- Business Operations: 78%
+- Real Estate Transactions: 12%
+- Vehicle Purchases: 6%
+- Other: 4%
+
+Risk Assessment Results:
+- Low Risk: 65%
+- Medium Risk: 25%
+- High Risk: 10%
+`}
+
+COMPLIANCE VERIFICATION
+======================
+☑ Customer identification procedures completed
+☑ Enhanced due diligence performed where required
+☑ Transaction monitoring systems reviewed
+☑ Regulatory filing requirements verified
+☑ Quality assurance review completed
+${report.status === 'submitted' ? '☑ Regulatory submission completed' : '☐ Pending regulatory submission'}
+
+REGULATORY REQUIREMENTS
+======================
+Filing Entity: Financial Crimes Enforcement Network (FinCEN)
+Regulation: Bank Secrecy Act (BSA)
+Form Type: ${report.type}
+Filing Method: BSA E-Filing System
+Confidentiality: This report contains confidential supervisory information
+
+CONCLUSION
+==========
+${report.status === 'submitted' ? 
+`This ${report.type} report has been successfully filed with the appropriate regulatory authorities within the required timeframe. All regulatory requirements have been met, and supporting documentation has been retained per policy.` :
+`This ${report.type} report is ${report.status === 'overdue' ? 'overdue and requires immediate attention' : 'in draft status and pending final review'}. ${report.status === 'overdue' ? 'Urgent action is required to ensure regulatory compliance.' : 'Final review and submission should be completed by the due date.'}`}
+
+---
+This report is generated automatically by the AML Compliance System.
+For questions regarding this report, contact the Compliance Department.
+Report Generation Time: ${currentDate}
+    `.trim();
   };
 
   return (
@@ -363,8 +459,13 @@ This is a sample regulatory report. In a real application, this would contain de
               </div>
 
               <div className="bg-slate-900 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-white mb-4">Description</h3>
-                <p className="text-slate-300">{selectedReport.description}</p>
+                <h3 className="text-lg font-semibold text-white mb-4">Report Content Preview</h3>
+                <div className="bg-slate-800 p-4 rounded border font-mono text-xs text-slate-300 max-h-64 overflow-y-auto whitespace-pre-line">
+                  {generateReportContent(selectedReport).substring(0, 1000)}...
+                  <div className="mt-2 text-slate-400 italic">
+                    [Preview truncated - Download full report for complete content]
+                  </div>
+                </div>
               </div>
 
               <div className="flex space-x-4">
@@ -372,7 +473,7 @@ This is a sample regulatory report. In a real application, this would contain de
                   onClick={() => handleDownloadReport(selectedReport)}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
-                  Download Report
+                  Download Full Report
                 </button>
                 <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
                   Submit Report
