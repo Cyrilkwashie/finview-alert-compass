@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AlertTriangle, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
 import TransactionDetail from './TransactionDetail';
@@ -61,8 +60,16 @@ const mockTransactions: Transaction[] = [
   }
 ];
 
-const TransactionTable = () => {
+interface TransactionTableProps {
+  showOnlyFlagged?: boolean;
+}
+
+const TransactionTable = ({ showOnlyFlagged = false }: TransactionTableProps) => {
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+
+  const filteredTransactions = showOnlyFlagged 
+    ? mockTransactions.filter(t => t.status === 'flagged')
+    : mockTransactions;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -110,7 +117,9 @@ const TransactionTable = () => {
       <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-700">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white">Recent Transactions</h3>
+            <h3 className="text-lg font-semibold text-white">
+              {showOnlyFlagged ? 'Flagged Transactions' : 'Recent Transactions'}
+            </h3>
             <div className="flex items-center space-x-2">
               <button className="px-3 py-1 text-sm bg-slate-700 text-slate-300 rounded-md hover:bg-slate-600 transition-colors">
                 Filter
@@ -153,7 +162,7 @@ const TransactionTable = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-700">
-              {mockTransactions.map((transaction) => (
+              {filteredTransactions.map((transaction) => (
                 <tr key={transaction.id} className="hover:bg-slate-700/50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-400">
                     {transaction.id}

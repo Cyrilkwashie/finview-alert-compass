@@ -27,18 +27,6 @@ const transactions = [
     country: 'UAE'
   },
   {
-    id: 'TXN-2024-001546',
-    customer: 'Maria Rodriguez',
-    amount: '$45,750',
-    type: 'ACH Transfer',
-    time: '13:45:12',
-    date: '2024-01-15',
-    riskScore: 34,
-    status: 'cleared',
-    rules: [],
-    country: 'USA'
-  },
-  {
     id: 'TXN-2024-001545',
     customer: 'John Smith',
     amount: '$9,800',
@@ -46,17 +34,31 @@ const transactions = [
     time: '12:15:33',
     date: '2024-01-15',
     riskScore: 68,
-    status: 'under_review',
+    status: 'flagged',
     rules: ['Structuring Pattern'],
     country: 'USA'
+  },
+  {
+    id: 'TXN-2024-001548',
+    customer: 'Robert Chen',
+    amount: '$45,000',
+    type: 'Wire Transfer',
+    time: '16:45:22',
+    date: '2024-01-15',
+    riskScore: 92,
+    status: 'flagged',
+    rules: ['Suspicious Pattern', 'Geographic Risk'],
+    country: 'China'
   }
 ];
 
 const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('flagged');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
+  const [filteredTransactions, setFilteredTransactions] = useState(
+    transactions.filter(t => t.status === 'flagged')
+  );
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -89,7 +91,8 @@ const Transactions = () => {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    const filtered = transactions.filter(t => 
+    const baseData = transactions.filter(t => t.status === 'flagged');
+    const filtered = baseData.filter(t => 
       t.customer.toLowerCase().includes(term.toLowerCase()) ||
       t.id.toLowerCase().includes(term.toLowerCase()) ||
       t.amount.includes(term)
@@ -99,10 +102,11 @@ const Transactions = () => {
 
   const handleStatusFilter = (status: string) => {
     setStatusFilter(status);
+    const baseData = transactions.filter(t => t.status === 'flagged');
     if (status === 'all') {
-      setFilteredTransactions(transactions);
+      setFilteredTransactions(baseData);
     } else {
-      const filtered = transactions.filter(t => t.status === status);
+      const filtered = baseData.filter(t => t.status === status);
       setFilteredTransactions(filtered);
     }
   };
@@ -116,13 +120,13 @@ const Transactions = () => {
         <header className="bg-slate-900 border-b border-slate-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white">Transaction Monitoring</h1>
-              <p className="text-slate-400 mt-1">Real-time transaction analysis and risk assessment</p>
+              <h1 className="text-2xl font-bold text-white">Flagged Transactions</h1>
+              <p className="text-slate-400 mt-1">High-risk transactions requiring attention</p>
             </div>
             <div className="flex items-center space-x-4">
               <ExportUtility 
                 data={filteredTransactions} 
-                filename="transactions" 
+                filename="flagged-transactions" 
                 type="transactions"
               />
             </div>
@@ -142,16 +146,6 @@ const Transactions = () => {
                 className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => handleStatusFilter(e.target.value)}
-              className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Status</option>
-              <option value="flagged">Flagged</option>
-              <option value="under_review">Under Review</option>
-              <option value="cleared">Cleared</option>
-            </select>
             <button className="flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-lg transition-colors">
               <Filter className="h-4 w-4" />
               <span>More Filters</span>

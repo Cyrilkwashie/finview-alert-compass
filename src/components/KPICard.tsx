@@ -9,9 +9,18 @@ interface KPICardProps {
   changeType?: 'positive' | 'negative' | 'neutral';
   icon: LucideIcon;
   iconColor?: string;
+  bgColor?: string;
 }
 
-const KPICard = ({ title, value, change, changeType = 'neutral', icon: Icon, iconColor = 'text-blue-500' }: KPICardProps) => {
+const KPICard = ({ 
+  title, 
+  value, 
+  change, 
+  changeType = 'neutral', 
+  icon: Icon, 
+  iconColor = 'text-blue-500',
+  bgColor = 'bg-slate-800'
+}: KPICardProps) => {
   const getChangeColor = () => {
     switch (changeType) {
       case 'positive': return 'text-green-400';
@@ -21,7 +30,7 @@ const KPICard = ({ title, value, change, changeType = 'neutral', icon: Icon, ico
   };
 
   return (
-    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-all duration-200 hover:shadow-lg">
+    <div className={`${bgColor} rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-all duration-200 hover:shadow-lg`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-slate-400 text-sm font-medium">{title}</p>

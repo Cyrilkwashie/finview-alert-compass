@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   AlertTriangle, 
@@ -50,7 +49,8 @@ const Index = () => {
               change="+12% from yesterday"
               changeType="negative"
               icon={AlertTriangle}
-              iconColor="text-red-500"
+              iconColor="text-red-400"
+              bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
             />
             <KPICard
               title="Active Cases"
@@ -58,7 +58,8 @@ const Index = () => {
               change="+3 new cases"
               changeType="neutral"
               icon={FileText}
-              iconColor="text-orange-500"
+              iconColor="text-orange-400"
+              bgColor="bg-gradient-to-br from-orange-900/20 to-orange-800/10 border-orange-800/50"
             />
             <KPICard
               title="Risk Score Avg"
@@ -66,7 +67,8 @@ const Index = () => {
               change="-5% improvement"
               changeType="positive"
               icon={TrendingUp}
-              iconColor="text-green-500"
+              iconColor="text-emerald-400"
+              bgColor="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-800/50"
             />
             <KPICard
               title="High-Risk Customers"
@@ -74,7 +76,8 @@ const Index = () => {
               change="Stable"
               changeType="neutral"
               icon={Users}
-              iconColor="text-purple-500"
+              iconColor="text-purple-400"
+              bgColor="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-800/50"
             />
           </div>
 
@@ -86,7 +89,8 @@ const Index = () => {
               change="+18% volume"
               changeType="positive"
               icon={Activity}
-              iconColor="text-blue-500"
+              iconColor="text-blue-400"
+              bgColor="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-800/50"
             />
             <KPICard
               title="Transaction Value"
@@ -94,7 +98,8 @@ const Index = () => {
               change="+25% from last week"
               changeType="positive"
               icon={DollarSign}
-              iconColor="text-green-500"
+              iconColor="text-green-400"
+              bgColor="bg-gradient-to-br from-green-900/20 to-green-800/10 border-green-800/50"
             />
             <KPICard
               title="Avg Processing Time"
@@ -102,7 +107,8 @@ const Index = () => {
               change="-15 min faster"
               changeType="positive"
               icon={Clock}
-              iconColor="text-cyan-500"
+              iconColor="text-cyan-400"
+              bgColor="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border-cyan-800/50"
             />
             <KPICard
               title="Compliance Score"
@@ -110,12 +116,13 @@ const Index = () => {
               change="+1.2% this month"
               changeType="positive"
               icon={Shield}
-              iconColor="text-emerald-500"
+              iconColor="text-indigo-400"
+              bgColor="bg-gradient-to-br from-indigo-900/20 to-indigo-800/10 border-indigo-800/50"
             />
           </div>
 
           {/* Transaction Table */}
-          <TransactionTable />
+          <TransactionTable showOnlyFlagged={true} />
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
