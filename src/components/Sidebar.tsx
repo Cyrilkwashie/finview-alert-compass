@@ -1,16 +1,12 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   BarChart3, 
   Shield, 
-  AlertTriangle, 
-  CreditCard, 
   Users, 
   FileText, 
   Settings, 
   TrendingUp,
-  Filter,
   Menu,
   X
 } from 'lucide-react';
@@ -20,9 +16,6 @@ const Sidebar = () => {
 
   const navItems = [
     { name: 'Dashboard', href: '/', icon: BarChart3 },
-    { name: 'Flagged Transactions', href: '/transactions', icon: CreditCard },
-    { name: 'Transactions by Rule', href: '/transactions-by-rule', icon: Filter },
-    { name: 'Alerts', href: '/alerts', icon: AlertTriangle },
     { name: 'Rules Engine', href: '/rules', icon: Shield },
     { name: 'Customer Profiles', href: '/customers', icon: Users },
     { name: 'Reports', href: '/reports', icon: FileText },

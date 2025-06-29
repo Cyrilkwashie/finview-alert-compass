@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   AlertTriangle, 
   FileText, 
@@ -19,6 +20,8 @@ import KPICard from '../components/KPICard';
 import TransactionTable from '../components/TransactionTable';
 
 const Index = () => {
+  const navigate = useNavigate();
+
   // Mock function to get transaction count for each rule
   const getTransactionCountForRule = (ruleName: string) => {
     const ruleCounts = {
@@ -30,6 +33,37 @@ const Index = () => {
       'MULTI BRANCH CUSTOMER TRANSACTION': 19
     };
     return ruleCounts[ruleName as keyof typeof ruleCounts] || 0;
+  };
+
+  const handleCardClick = (cardType: string) => {
+    switch (cardType) {
+      case 'flagged-transactions':
+        navigate('/transactions');
+        break;
+      case 'active-cases':
+        navigate('/alerts');
+        break;
+      case 'high-value-transaction':
+        navigate('/transactions-by-rule?rule=HIGH_VALUE_TRANSACTION');
+        break;
+      case 'aml-deviation':
+        navigate('/transactions-by-rule?rule=AML_DEVIATION');
+        break;
+      case 'high-risk-customer':
+        navigate('/transactions-by-rule?rule=HIGH_RISK_CUSTOMER_TRANSACTION');
+        break;
+      case 'gl-to-customer':
+        navigate('/transactions-by-rule?rule=GL_TO_CUSTOMER');
+        break;
+      case 'deposit-dormant':
+        navigate('/transactions-by-rule?rule=DEPOSIT_IN_DORMANT');
+        break;
+      case 'multi-branch':
+        navigate('/transactions-by-rule?rule=MULTI_BRANCH_CUSTOMER_TRANSACTION');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -61,82 +95,98 @@ const Index = () => {
         <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <KPICard
-              title="Flagged Transactions"
-              value="47"
-              change="+12% from yesterday"
-              changeType="negative"
-              icon={AlertTriangle}
-              iconColor="text-red-400"
-              bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
-            />
-            <KPICard
-              title="Active Cases"
-              value="23"
-              change="+3 new cases"
-              changeType="neutral"
-              icon={FileText}
-              iconColor="text-orange-400"
-              bgColor="bg-gradient-to-br from-orange-900/20 to-orange-800/10 border-orange-800/50"
-            />
-            <KPICard
-              title="High Value Transaction"
-              value={getTransactionCountForRule('HIGH VALUE TRANSACTION')}
-              change="Latest flagged transactions"
-              changeType="neutral"
-              icon={TrendingUp}
-              iconColor="text-emerald-400"
-              bgColor="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-800/50"
-            />
-            <KPICard
-              title="AML Deviation"
-              value={getTransactionCountForRule('AML DEVIATION')}
-              change="Compliance violations"
-              changeType="negative"
-              icon={Shield}
-              iconColor="text-purple-400"
-              bgColor="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-800/50"
-            />
+            <div onClick={() => handleCardClick('flagged-transactions')} className="cursor-pointer">
+              <KPICard
+                title="Flagged Transactions"
+                value="47"
+                change="+12% from yesterday"
+                changeType="negative"
+                icon={AlertTriangle}
+                iconColor="text-red-400"
+                bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('active-cases')} className="cursor-pointer">
+              <KPICard
+                title="Active Cases"
+                value="23"
+                change="+3 new cases"
+                changeType="neutral"
+                icon={FileText}
+                iconColor="text-orange-400"
+                bgColor="bg-gradient-to-br from-orange-900/20 to-orange-800/10 border-orange-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('high-value-transaction')} className="cursor-pointer">
+              <KPICard
+                title="High Value Transaction"
+                value={getTransactionCountForRule('HIGH VALUE TRANSACTION')}
+                change="Latest flagged transactions"
+                changeType="neutral"
+                icon={TrendingUp}
+                iconColor="text-emerald-400"
+                bgColor="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('aml-deviation')} className="cursor-pointer">
+              <KPICard
+                title="AML Deviation"
+                value={getTransactionCountForRule('AML DEVIATION')}
+                change="Compliance violations"
+                changeType="negative"
+                icon={Shield}
+                iconColor="text-purple-400"
+                bgColor="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-800/50"
+              />
+            </div>
           </div>
 
           {/* Rule-based KPI Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <KPICard
-              title="High Risk Customer Transaction"
-              value={getTransactionCountForRule('HIGH RISK CUSTOMER TRANSACTION')}
-              change="Risk-flagged customers"
-              changeType="negative"
-              icon={UserCheck}
-              iconColor="text-red-400"
-              bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
-            />
-            <KPICard
-              title="GL to Customer"
-              value={getTransactionCountForRule('GL TO CUSTOMER')}
-              change="General Ledger transfers"
-              changeType="neutral"
-              icon={CreditCard}
-              iconColor="text-blue-400"
-              bgColor="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-800/50"
-            />
-            <KPICard
-              title="Deposit in Dormant"
-              value={getTransactionCountForRule('DEPOSIT IN DORMANT')}
-              change="Inactive account activity"
-              changeType="negative"
-              icon={Banknote}
-              iconColor="text-yellow-400"
-              bgColor="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border-yellow-800/50"
-            />
-            <KPICard
-              title="Multi Branch Customer Transaction"
-              value={getTransactionCountForRule('MULTI BRANCH CUSTOMER TRANSACTION')}
-              change="Cross-branch activities"
-              changeType="neutral"
-              icon={Building2}
-              iconColor="text-cyan-400"
-              bgColor="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border-cyan-800/50"
-            />
+            <div onClick={() => handleCardClick('high-risk-customer')} className="cursor-pointer">
+              <KPICard
+                title="High Risk Customer Transaction"
+                value={getTransactionCountForRule('HIGH RISK CUSTOMER TRANSACTION')}
+                change="Risk-flagged customers"
+                changeType="negative"
+                icon={UserCheck}
+                iconColor="text-red-400"
+                bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('gl-to-customer')} className="cursor-pointer">
+              <KPICard
+                title="GL to Customer"
+                value={getTransactionCountForRule('GL TO CUSTOMER')}
+                change="General Ledger transfers"
+                changeType="neutral"
+                icon={CreditCard}
+                iconColor="text-blue-400"
+                bgColor="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('deposit-dormant')} className="cursor-pointer">
+              <KPICard
+                title="Deposit in Dormant"
+                value={getTransactionCountForRule('DEPOSIT IN DORMANT')}
+                change="Inactive account activity"
+                changeType="negative"
+                icon={Banknote}
+                iconColor="text-yellow-400"
+                bgColor="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border-yellow-800/50"
+              />
+            </div>
+            <div onClick={() => handleCardClick('multi-branch')} className="cursor-pointer">
+              <KPICard
+                title="Multi Branch Customer Transaction"
+                value={getTransactionCountForRule('MULTI BRANCH CUSTOMER TRANSACTION')}
+                change="Cross-branch activities"
+                changeType="neutral"
+                icon={Building2}
+                iconColor="text-cyan-400"
+                bgColor="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border-cyan-800/50"
+              />
+            </div>
           </div>
 
           {/* Transaction Table - Show only last 5 flagged transactions */}
