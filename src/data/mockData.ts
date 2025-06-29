@@ -1,4 +1,3 @@
-
 export interface Transaction {
   id: string;
   customer: string;
@@ -34,6 +33,7 @@ export interface Alert {
 }
 
 export const mockTransactions: Transaction[] = [
+  // HIGH VALUE TRANSACTION transactions
   {
     id: 'TX-2024-001',
     customer: 'Ahmed Hassan',
@@ -41,7 +41,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-15 14:32',
     riskScore: 98,
     status: 'flagged',
-    rules: ['Large Transaction', 'Sanctions List', 'Layering'],
+    rules: ['HIGH VALUE TRANSACTION', 'Sanctions List', 'Layering'],
     type: 'Wire Transfer',
     country: 'UAE',
     sourceAccount: '****8901',
@@ -53,13 +53,236 @@ export const mockTransactions: Transaction[] = [
     location: 'Dubai, UAE'
   },
   {
+    id: 'TX-2024-016',
+    customer: 'Marcus Johnson',
+    amount: 87500,
+    date: '2024-01-15 11:45',
+    riskScore: 89,
+    status: 'flagged',
+    rules: ['HIGH VALUE TRANSACTION'],
+    type: 'Wire Transfer',
+    country: 'USA',
+    sourceAccount: '****3421',
+    destinationAccount: '****7865',
+    routingNumber: '021000021',
+    description: 'Real estate purchase',
+    ipAddress: '192.168.2.105',
+    deviceInfo: 'Safari 17.1 on macOS',
+    location: 'Miami, FL, USA'
+  },
+  {
+    id: 'TX-2024-017',
+    customer: 'Elena Rodriguez',
+    amount: 156000,
+    date: '2024-01-14 16:22',
+    riskScore: 91,
+    status: 'flagged',
+    rules: ['HIGH VALUE TRANSACTION', 'PEP'],
+    type: 'Wire Transfer',
+    country: 'Spain',
+    sourceAccount: '****9876',
+    destinationAccount: '****4321',
+    swiftCode: 'BBVAESMM',
+    description: 'Investment portfolio transfer',
+    ipAddress: '85.45.123.67',
+    deviceInfo: 'Firefox 120.0 on Windows 11',
+    location: 'Madrid, Spain'
+  },
+
+  // AML DEVIATION transactions
+  {
+    id: 'TX-2024-018',
+    customer: 'David Kim',
+    amount: 45000,
+    date: '2024-01-15 09:15',
+    riskScore: 85,
+    status: 'flagged',
+    rules: ['AML DEVIATION', 'Geographic Risk'],
+    type: 'Cash Deposit',
+    country: 'South Korea',
+    sourceAccount: '****5432',
+    destinationAccount: '****8765',
+    description: 'Multiple structured deposits',
+    ipAddress: '211.45.78.90',
+    deviceInfo: 'Samsung Internet 22.0 on Android 13',
+    location: 'Seoul, South Korea'
+  },
+  {
+    id: 'TX-2024-019',
+    customer: 'Rachel Adams',
+    amount: 23500,
+    date: '2024-01-14 13:30',
+    riskScore: 78,
+    status: 'flagged',
+    rules: ['AML DEVIATION'],
+    type: 'Wire Transfer',
+    country: 'Canada',
+    sourceAccount: '****6789',
+    destinationAccount: '****1234',
+    description: 'Unusual transaction pattern',
+    ipAddress: '142.34.56.78',
+    deviceInfo: 'Chrome 118.0 on iOS 17',
+    location: 'Vancouver, BC, Canada'
+  },
+
+  // HIGH RISK CUSTOMER TRANSACTION transactions
+  {
+    id: 'TX-2024-004',
+    customer: 'Robert Chen',
+    amount: 45000,
+    date: '2024-01-15 11:22',
+    riskScore: 92,
+    status: 'flagged',
+    rules: ['HIGH RISK CUSTOMER TRANSACTION', 'Geographic Risk', 'PEP'],
+    type: 'Wire Transfer',
+    country: 'China',
+    sourceAccount: '****4567',
+    destinationAccount: '****8901',
+    swiftCode: 'ICBKCNBJ',
+    description: 'International trade payment',
+    ipAddress: '114.55.78.234',
+    deviceInfo: 'Firefox 120.0 on Ubuntu 22.04',
+    location: 'Shanghai, China'
+  },
+  {
+    id: 'TX-2024-020',
+    customer: 'Vladimir Petrov',
+    amount: 78000,
+    date: '2024-01-14 15:45',
+    riskScore: 94,
+    status: 'flagged',
+    rules: ['HIGH RISK CUSTOMER TRANSACTION', 'Sanctions List'],
+    type: 'Wire Transfer',
+    country: 'Russia',
+    sourceAccount: '****7890',
+    destinationAccount: '****3456',
+    swiftCode: 'SABRRUMM',
+    description: 'Energy sector payment',
+    ipAddress: '185.125.67.89',
+    deviceInfo: 'Yandex Browser 23.0 on Windows 10',
+    location: 'Moscow, Russia'
+  },
+
+  // GL TO CUSTOMER transactions
+  {
+    id: 'TX-2024-021',
+    customer: 'Corporate Banking Ltd',
+    amount: 35000,
+    date: '2024-01-15 08:30',
+    riskScore: 65,
+    status: 'flagged',
+    rules: ['GL TO CUSTOMER'],
+    type: 'Internal Transfer',
+    country: 'USA',
+    sourceAccount: 'GL-001',
+    destinationAccount: '****5678',
+    description: 'General Ledger to customer account transfer',
+    ipAddress: '10.0.0.1',
+    deviceInfo: 'Internal System',
+    location: 'New York, NY, USA'
+  },
+  {
+    id: 'TX-2024-022',
+    customer: 'Tech Solutions Inc',
+    amount: 18500,
+    date: '2024-01-14 14:15',
+    riskScore: 58,
+    status: 'flagged',
+    rules: ['GL TO CUSTOMER'],
+    type: 'Internal Transfer',
+    country: 'USA',
+    sourceAccount: 'GL-002',
+    destinationAccount: '****9012',
+    description: 'GL adjustment transfer',
+    ipAddress: '10.0.0.2',
+    deviceInfo: 'Internal System',
+    location: 'San Francisco, CA, USA'
+  },
+
+  // DEPOSIT IN DORMANT transactions
+  {
+    id: 'TX-2024-023',
+    customer: 'Margaret Wilson',
+    amount: 12000,
+    date: '2024-01-15 16:45',
+    riskScore: 82,
+    status: 'flagged',
+    rules: ['DEPOSIT IN DORMANT'],
+    type: 'Cash Deposit',
+    country: 'USA',
+    sourceAccount: '****3456',
+    destinationAccount: '****7890',
+    description: 'Deposit to dormant account',
+    ipAddress: '172.16.45.123',
+    deviceInfo: 'Edge 119.0 on Windows 11',
+    location: 'Chicago, IL, USA'
+  },
+  {
+    id: 'TX-2024-024',
+    customer: 'James Thompson',
+    amount: 8750,
+    date: '2024-01-14 12:30',
+    riskScore: 75,
+    status: 'flagged',
+    rules: ['DEPOSIT IN DORMANT'],
+    type: 'Wire Transfer',
+    country: 'UK',
+    sourceAccount: '****6543',
+    destinationAccount: '****2109',
+    swiftCode: 'BARCGB22',
+    description: 'Transfer to inactive account',
+    ipAddress: '87.45.123.67',
+    deviceInfo: 'Chrome 119.0 on macOS',
+    location: 'London, UK'
+  },
+
+  // MULTI BRANCH CUSTOMER TRANSACTION transactions
+  {
+    id: 'TX-2024-025',
+    customer: 'Sarah Martinez',
+    amount: 15500,
+    date: '2024-01-15 13:20',
+    riskScore: 69,
+    status: 'flagged',
+    rules: ['MULTI BRANCH CUSTOMER TRANSACTION'],
+    type: 'Wire Transfer',
+    country: 'USA',
+    sourceAccount: '****4567',
+    destinationAccount: '****8901',
+    routingNumber: '121000248',
+    description: 'Cross-branch customer transaction',
+    ipAddress: '192.168.1.150',
+    deviceInfo: 'Chrome 118.0 on Windows 11',
+    location: 'Los Angeles, CA, USA'
+  },
+  {
+    id: 'TX-2024-026',
+    customer: 'Michael O\'Connor',
+    amount: 22000,
+    date: '2024-01-14 10:45',
+    riskScore: 71,
+    status: 'flagged',
+    rules: ['MULTI BRANCH CUSTOMER TRANSACTION', 'Velocity Check'],
+    type: 'Wire Transfer',
+    country: 'Ireland',
+    sourceAccount: '****6789',
+    destinationAccount: '****3456',
+    swiftCode: 'BOFIIE2D',
+    description: 'Multi-branch business transaction',
+    ipAddress: '87.45.123.67',
+    deviceInfo: 'Chrome 119.0 on macOS',
+    location: 'Dublin, Ireland'
+  },
+
+  // Existing transactions with updated rule names
+  {
     id: 'TX-2024-002',
     customer: 'John Anderson',
     amount: 15000,
     date: '2024-01-15 13:45',
     riskScore: 85,
     status: 'flagged',
-    rules: ['Structuring', 'High Amount'],
+    rules: ['Structuring', 'HIGH VALUE TRANSACTION'],
     type: 'Wire Transfer',
     country: 'USA',
     sourceAccount: '****1234',
@@ -88,24 +311,6 @@ export const mockTransactions: Transaction[] = [
     location: 'Mexico City, Mexico'
   },
   {
-    id: 'TX-2024-004',
-    customer: 'Robert Chen',
-    amount: 45000,
-    date: '2024-01-15 11:22',
-    riskScore: 92,
-    status: 'flagged',
-    rules: ['Suspicious Pattern', 'Geographic Risk', 'PEP'],
-    type: 'Wire Transfer',
-    country: 'China',
-    sourceAccount: '****4567',
-    destinationAccount: '****8901',
-    swiftCode: 'ICBKCNBJ',
-    description: 'International trade payment',
-    ipAddress: '114.55.78.234',
-    deviceInfo: 'Firefox 120.0 on Ubuntu 22.04',
-    location: 'Shanghai, China'
-  },
-  {
     id: 'TX-2024-005',
     customer: 'Sarah Williams',
     amount: 8750,
@@ -129,7 +334,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-15 09:33',
     riskScore: 88,
     status: 'flagged',
-    rules: ['Geographic Risk', 'Large Transaction', 'Sanctions List'],
+    rules: ['Geographic Risk', 'HIGH VALUE TRANSACTION', 'Sanctions List'],
     type: 'Wire Transfer',
     country: 'Russia',
     sourceAccount: '****6789',
@@ -147,7 +352,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 16:45',
     riskScore: 75,
     status: 'flagged',
-    rules: ['Structuring', 'High Amount'],
+    rules: ['Structuring', 'HIGH VALUE TRANSACTION'],
     type: 'Cash Deposit',
     country: 'USA',
     sourceAccount: '****7890',
@@ -164,7 +369,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 15:22',
     riskScore: 95,
     status: 'flagged',
-    rules: ['Large Transaction', 'PEP', 'Geographic Risk'],
+    rules: ['HIGH VALUE TRANSACTION', 'PEP', 'Geographic Risk'],
     type: 'Wire Transfer',
     country: 'Saudi Arabia',
     sourceAccount: '****8901',
@@ -200,7 +405,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 13:55',
     riskScore: 91,
     status: 'flagged',
-    rules: ['Large Transaction', 'Sanctions List', 'PEP'],
+    rules: ['HIGH VALUE TRANSACTION', 'Sanctions List', 'PEP'],
     type: 'Wire Transfer',
     country: 'Iran',
     sourceAccount: '****3456',
@@ -235,7 +440,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 11:15',
     riskScore: 84,
     status: 'flagged',
-    rules: ['Geographic Risk', 'Large Transaction'],
+    rules: ['Geographic Risk', 'HIGH VALUE TRANSACTION'],
     type: 'Wire Transfer',
     country: 'Ukraine',
     sourceAccount: '****5678',
@@ -253,7 +458,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 10:45',
     riskScore: 78,
     status: 'flagged',
-    rules: ['High Amount', 'Velocity Check'],
+    rules: ['HIGH VALUE TRANSACTION', 'Velocity Check'],
     type: 'Wire Transfer',
     country: 'Ireland',
     sourceAccount: '****6789',
@@ -271,7 +476,7 @@ export const mockTransactions: Transaction[] = [
     date: '2024-01-14 09:20',
     riskScore: 82,
     status: 'flagged',
-    rules: ['PEP', 'Geographic Risk'],
+    rules: ['PEP', 'Geographic Risk', 'HIGH VALUE TRANSACTION'],
     type: 'Wire Transfer',
     country: 'Lebanon',
     sourceAccount: '****7890',
@@ -313,7 +518,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-001',
     customer: 'Ahmed Hassan',
     amount: '$125,000',
-    rules: ['Large Transaction', 'Sanctions List', 'Layering']
+    rules: ['HIGH VALUE TRANSACTION', 'Sanctions List', 'Layering']
   },
   {
     id: 'ALT-2024-002',
@@ -326,7 +531,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-002',
     customer: 'John Anderson',
     amount: '$15,000',
-    rules: ['Structuring', 'High Amount']
+    rules: ['Structuring', 'HIGH VALUE TRANSACTION']
   },
   {
     id: 'ALT-2024-003',
@@ -352,7 +557,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-004',
     customer: 'Robert Chen',
     amount: '$45,000',
-    rules: ['Suspicious Pattern', 'Geographic Risk', 'PEP']
+    rules: ['HIGH RISK CUSTOMER TRANSACTION', 'Geographic Risk', 'PEP']
   },
   {
     id: 'ALT-2024-005',
@@ -378,7 +583,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-006',
     customer: 'Viktor Petrov',
     amount: '$78,000',
-    rules: ['Geographic Risk', 'Large Transaction', 'Sanctions List']
+    rules: ['Geographic Risk', 'HIGH VALUE TRANSACTION', 'Sanctions List']
   },
   {
     id: 'ALT-2024-007',
@@ -391,7 +596,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-007',
     customer: 'Lisa Thompson',
     amount: '$9,900',
-    rules: ['Structuring', 'High Amount']
+    rules: ['Structuring', 'HIGH VALUE TRANSACTION']
   },
   {
     id: 'ALT-2024-008',
@@ -404,7 +609,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-008',
     customer: 'Omar Al-Rashid',
     amount: '$156,000',
-    rules: ['Large Transaction', 'PEP', 'Geographic Risk']
+    rules: ['HIGH VALUE TRANSACTION', 'PEP', 'Geographic Risk']
   },
   {
     id: 'ALT-2024-009',
@@ -430,7 +635,7 @@ export const mockAlerts: Alert[] = [
     transactionId: 'TX-2024-010',
     customer: 'Mohammed Ibrahim',
     amount: '$89,000',
-    rules: ['Large Transaction', 'Sanctions List', 'PEP']
+    rules: ['HIGH VALUE TRANSACTION', 'Sanctions List', 'PEP']
   }
 ];
 
@@ -441,7 +646,7 @@ export const ruleCategories = [
     rules: [
       {
         id: 'AML-001',
-        name: 'Large Transaction',
+        name: 'HIGH VALUE TRANSACTION',
         description: 'Flags transactions over $10,000',
         enabled: true,
         riskLevel: 'high',
@@ -474,6 +679,15 @@ export const ruleCategories = [
         riskLevel: 'high',
         category: 'AML',
         threshold: null
+      },
+      {
+        id: 'AML-005',
+        name: 'AML DEVIATION',
+        description: 'Detects deviations from AML compliance patterns',
+        enabled: true,
+        riskLevel: 'high',
+        category: 'AML',
+        threshold: null
       }
     ]
   },
@@ -501,12 +715,12 @@ export const ruleCategories = [
       },
       {
         id: 'FRAUD-003',
-        name: 'High Amount',
-        description: 'Flags unusually high transaction amounts for customer profile',
+        name: 'HIGH RISK CUSTOMER TRANSACTION',
+        description: 'Flags transactions from high-risk customer profiles',
         enabled: true,
-        riskLevel: 'medium',
+        riskLevel: 'high',
         category: 'Fraud',
-        threshold: 5000
+        threshold: null
       }
     ]
   },
@@ -530,6 +744,39 @@ export const ruleCategories = [
         enabled: true,
         riskLevel: 'high',
         category: 'Sanctions',
+        threshold: null
+      }
+    ]
+  },
+  {
+    id: 'INTERNAL',
+    name: 'Internal Controls',
+    rules: [
+      {
+        id: 'INTERNAL-001',
+        name: 'GL TO CUSTOMER',
+        description: 'Monitors General Ledger to customer transfers',
+        enabled: true,
+        riskLevel: 'medium',
+        category: 'Internal',
+        threshold: null
+      },
+      {
+        id: 'INTERNAL-002',
+        name: 'DEPOSIT IN DORMANT',
+        description: 'Flags deposits into dormant accounts',
+        enabled: true,
+        riskLevel: 'high',
+        category: 'Internal',
+        threshold: null
+      },
+      {
+        id: 'INTERNAL-003',
+        name: 'MULTI BRANCH CUSTOMER TRANSACTION',
+        description: 'Monitors cross-branch customer activities',
+        enabled: true,
+        riskLevel: 'medium',
+        category: 'Internal',
         threshold: null
       }
     ]

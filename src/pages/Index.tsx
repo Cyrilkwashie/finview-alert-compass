@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -24,15 +23,9 @@ const Index = () => {
 
   // Mock function to get transaction count for each rule
   const getTransactionCountForRule = (ruleName: string) => {
-    const ruleCounts = {
-      'HIGH VALUE TRANSACTION': 23,
-      'AML DEVIATION': 15,
-      'HIGH RISK CUSTOMER TRANSACTION': 31,
-      'GL TO CUSTOMER': 8,
-      'DEPOSIT IN DORMANT': 12,
-      'MULTI BRANCH CUSTOMER TRANSACTION': 19
-    };
-    return ruleCounts[ruleName as keyof typeof ruleCounts] || 0;
+    return mockTransactions.filter(transaction => 
+      transaction.rules.includes(ruleName) && transaction.status === 'flagged'
+    ).length;
   };
 
   const handleCardClick = (cardType: string) => {
@@ -98,7 +91,7 @@ const Index = () => {
             <div onClick={() => handleCardClick('flagged-transactions')} className="cursor-pointer">
               <KPICard
                 title="Flagged Transactions"
-                value="47"
+                value={mockTransactions.filter(t => t.status === 'flagged').length}
                 change="+12% from yesterday"
                 changeType="negative"
                 icon={AlertTriangle}

@@ -16,7 +16,6 @@ const Sidebar = () => {
 
   const navItems = [
     { name: 'Dashboard', href: '/', icon: BarChart3 },
-    { name: 'Rules Engine', href: '/rules', icon: Shield },
     { name: 'Customer Profiles', href: '/customers', icon: Users },
     { name: 'Reports', href: '/reports', icon: FileText },
     { name: 'Analytics', href: '/analytics', icon: TrendingUp },
