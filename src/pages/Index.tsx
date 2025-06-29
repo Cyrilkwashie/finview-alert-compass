@@ -38,22 +38,22 @@ const Index = () => {
         navigate('/alerts');
         break;
       case 'high-value-transaction':
-        navigate('/transactions-by-rule?rule=HIGH_VALUE_TRANSACTION');
+        navigate('/transactions?rule=HIGH_VALUE_TRANSACTION');
         break;
       case 'aml-deviation':
-        navigate('/transactions-by-rule?rule=AML_DEVIATION');
+        navigate('/transactions?rule=AML_DEVIATION');
         break;
       case 'high-risk-customer':
-        navigate('/transactions-by-rule?rule=HIGH_RISK_CUSTOMER_TRANSACTION');
+        navigate('/transactions?rule=HIGH_RISK_CUSTOMER_TRANSACTION');
         break;
       case 'gl-to-customer':
-        navigate('/transactions-by-rule?rule=GL_TO_CUSTOMER');
+        navigate('/transactions?rule=GL_TO_CUSTOMER');
         break;
       case 'deposit-dormant':
-        navigate('/transactions-by-rule?rule=DEPOSIT_IN_DORMANT');
+        navigate('/transactions?rule=DEPOSIT_IN_DORMANT');
         break;
       case 'multi-branch':
-        navigate('/transactions-by-rule?rule=MULTI_BRANCH_CUSTOMER_TRANSACTION');
+        navigate('/transactions?rule=MULTI_BRANCH_CUSTOMER_TRANSACTION');
         break;
       default:
         break;
