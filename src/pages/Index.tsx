@@ -17,6 +17,7 @@ import {
 import Sidebar from '../components/Sidebar';
 import KPICard from '../components/KPICard';
 import TransactionTable from '../components/TransactionTable';
+import { mockTransactions } from '../data/mockData';
 
 const Index = () => {
   const navigate = useNavigate();
