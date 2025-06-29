@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   Search, 
   Filter, 
@@ -16,12 +17,28 @@ import ExportUtility from '../components/ExportUtility';
 import { mockTransactions } from '../data/mockData';
 
 const Transactions = () => {
+  const [searchParams] = useSearchParams();
+  const ruleFilter = searchParams.get('rule');
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('flagged');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [filteredTransactions, setFilteredTransactions] = useState(
     mockTransactions.filter(t => t.status === 'flagged')
   );
+
+  // Filter transactions based on rule parameter
+  useEffect(() => {
+    let baseData = mockTransactions.filter(t => t.status === 'flagged');
+    
+    if (ruleFilter) {
+      baseData = baseData.filter(transaction => 
+        transaction.rules.includes(ruleFilter)
+      );
+    }
+    
+    setFilteredTransactions(baseData);
+  }, [ruleFilter]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -66,7 +83,16 @@ const Transactions = () => {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    const baseData = mockTransactions.filter(t => t.status === 'flagged');
+    let baseData = mockTransactions.filter(t => t.status === 'flagged');
+    
+    // Apply rule filter first if it exists
+    if (ruleFilter) {
+      baseData = baseData.filter(transaction => 
+        transaction.rules.includes(ruleFilter)
+      );
+    }
+    
+    // Then apply search filter
     const filtered = baseData.filter(t => 
       t.customer.toLowerCase().includes(term.toLowerCase()) ||
       t.id.toLowerCase().includes(term.toLowerCase()) ||
@@ -77,13 +103,35 @@ const Transactions = () => {
 
   const handleStatusFilter = (status: string) => {
     setStatusFilter(status);
-    const baseData = mockTransactions.filter(t => t.status === 'flagged');
+    let baseData = mockTransactions.filter(t => t.status === 'flagged');
+    
+    // Apply rule filter first if it exists
+    if (ruleFilter) {
+      baseData = baseData.filter(transaction => 
+        transaction.rules.includes(ruleFilter)
+      );
+    }
+    
     if (status === 'all') {
       setFilteredTransactions(baseData);
     } else {
       const filtered = baseData.filter(t => t.status === status);
       setFilteredTransactions(filtered);
     }
+  };
+
+  const getPageTitle = () => {
+    if (ruleFilter) {
+      return `Transactions: ${ruleFilter}`;
+    }
+    return 'Flagged Transactions';
+  };
+
+  const getPageDescription = () => {
+    if (ruleFilter) {
+      return `Transactions that triggered the ${ruleFilter} rule`;
+    }
+    return 'High-risk transactions requiring attention';
   };
 
   return (
@@ -95,13 +143,20 @@ const Transactions = () => {
         <header className="bg-slate-900 border-b border-slate-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white">Flagged Transactions</h1>
-              <p className="text-slate-400 mt-1">High-risk transactions requiring attention</p>
+              <h1 className="text-2xl font-bold text-white">{getPageTitle()}</h1>
+              <p className="text-slate-400 mt-1">{getPageDescription()}</p>
+              {ruleFilter && (
+                <div className="mt-2">
+                  <span className="px-3 py-1 bg-blue-900/30 text-blue-300 text-sm rounded border border-blue-800">
+                    {filteredTransactions.length} transactions found
+                  </span>
+                </div>
+              )}
             </div>
             <div className="flex items-center space-x-4">
               <ExportUtility 
                 data={filteredTransactions} 
-                filename="flagged-transactions" 
+                filename={ruleFilter ? `${ruleFilter.toLowerCase()}-transactions` : "flagged-transactions"} 
                 type="transactions"
               />
             </div>
@@ -177,7 +232,11 @@ const Transactions = () => {
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
                           {transaction.rules.map((rule, index) => (
-                            <span key={index} className="px-2 py-1 bg-orange-900/30 text-orange-300 text-xs rounded border border-orange-800">
+                            <span key={index} className={`px-2 py-1 text-xs rounded border ${
+                              rule === ruleFilter 
+                                ? 'bg-blue-900/30 text-blue-300 border-blue-800 font-medium' 
+                                : 'bg-orange-900/30 text-orange-300 border-orange-800'
+                            }`}>
                               {rule}
                             </span>
                           ))}
