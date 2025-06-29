@@ -8,13 +8,30 @@ import {
   Activity,
   DollarSign,
   Clock,
-  Shield
+  Shield,
+  CreditCard,
+  Building2,
+  UserCheck,
+  Banknote
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import KPICard from '../components/KPICard';
 import TransactionTable from '../components/TransactionTable';
 
 const Index = () => {
+  // Mock function to get transaction count for each rule
+  const getTransactionCountForRule = (ruleName: string) => {
+    const ruleCounts = {
+      'HIGH VALUE TRANSACTION': 23,
+      'AML DEVIATION': 15,
+      'HIGH RISK CUSTOMER TRANSACTION': 31,
+      'GL TO CUSTOMER': 8,
+      'DEPOSIT IN DORMANT': 12,
+      'MULTI BRANCH CUSTOMER TRANSACTION': 19
+    };
+    return ruleCounts[ruleName as keyof typeof ruleCounts] || 0;
+  };
+
   return (
     <div className="flex h-screen bg-slate-950">
       <Sidebar />
@@ -63,62 +80,62 @@ const Index = () => {
               bgColor="bg-gradient-to-br from-orange-900/20 to-orange-800/10 border-orange-800/50"
             />
             <KPICard
-              title="Risk Score Avg"
-              value="68"
-              change="-5% improvement"
-              changeType="positive"
+              title="High Value Transaction"
+              value={getTransactionCountForRule('HIGH VALUE TRANSACTION')}
+              change="Latest flagged transactions"
+              changeType="neutral"
               icon={TrendingUp}
               iconColor="text-emerald-400"
               bgColor="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-800/50"
             />
             <KPICard
-              title="High-Risk Customers"
-              value="156"
-              change="Stable"
-              changeType="neutral"
-              icon={Users}
+              title="AML Deviation"
+              value={getTransactionCountForRule('AML DEVIATION')}
+              change="Compliance violations"
+              changeType="negative"
+              icon={Shield}
               iconColor="text-purple-400"
               bgColor="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-800/50"
             />
           </div>
 
-          {/* Secondary KPI Row */}
+          {/* Rule-based KPI Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <KPICard
-              title="Total Transactions"
-              value="2,847"
-              change="+18% volume"
-              changeType="positive"
-              icon={Activity}
+              title="High Risk Customer Transaction"
+              value={getTransactionCountForRule('HIGH RISK CUSTOMER TRANSACTION')}
+              change="Risk-flagged customers"
+              changeType="negative"
+              icon={UserCheck}
+              iconColor="text-red-400"
+              bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
+            />
+            <KPICard
+              title="GL to Customer"
+              value={getTransactionCountForRule('GL TO CUSTOMER')}
+              change="General Ledger transfers"
+              changeType="neutral"
+              icon={CreditCard}
               iconColor="text-blue-400"
               bgColor="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-800/50"
             />
             <KPICard
-              title="Transaction Value"
-              value="$24.8M"
-              change="+25% from last week"
-              changeType="positive"
-              icon={DollarSign}
-              iconColor="text-green-400"
-              bgColor="bg-gradient-to-br from-green-900/20 to-green-800/10 border-green-800/50"
+              title="Deposit in Dormant"
+              value={getTransactionCountForRule('DEPOSIT IN DORMANT')}
+              change="Inactive account activity"
+              changeType="negative"
+              icon={Banknote}
+              iconColor="text-yellow-400"
+              bgColor="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border-yellow-800/50"
             />
             <KPICard
-              title="Avg Processing Time"
-              value="2.3 hrs"
-              change="-15 min faster"
-              changeType="positive"
-              icon={Clock}
+              title="Multi Branch Customer Transaction"
+              value={getTransactionCountForRule('MULTI BRANCH CUSTOMER TRANSACTION')}
+              change="Cross-branch activities"
+              changeType="neutral"
+              icon={Building2}
               iconColor="text-cyan-400"
               bgColor="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border-cyan-800/50"
-            />
-            <KPICard
-              title="Compliance Score"
-              value="94.2%"
-              change="+1.2% this month"
-              changeType="positive"
-              icon={Shield}
-              iconColor="text-indigo-400"
-              bgColor="bg-gradient-to-br from-indigo-900/20 to-indigo-800/10 border-indigo-800/50"
             />
           </div>
 
