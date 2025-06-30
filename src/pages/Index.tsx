@@ -1,65 +1,102 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  AlertTriangle, 
-  FileText, 
-  TrendingUp, 
-  Users,
-  Activity,
-  DollarSign,
-  Clock,
-  Shield,
-  CreditCard,
-  Building2,
-  UserCheck,
-  Banknote
-} from 'lucide-react';
+import { AlertTriangle, TrendingUp, Users, DollarSign, Globe, Shield, Clock, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import KPICard from '../components/KPICard';
-import TransactionTable from '../components/TransactionTable';
-import { mockTransactions } from '../data/mockData';
 
 const Index = () => {
-  const navigate = useNavigate();
-
-  // Mock function to get transaction count for each rule
-  const getTransactionCountForRule = (ruleName: string) => {
-    return mockTransactions.filter(transaction => 
-      transaction.rules.some(rule => rule.toUpperCase() === ruleName.toUpperCase()) && 
-      transaction.status === 'flagged'
-    ).length;
-  };
-
-  const handleCardClick = (cardType: string) => {
-    switch (cardType) {
-      case 'flagged-transactions':
-        navigate('/transactions');
-        break;
-      case 'active-cases':
-        navigate('/alerts');
-        break;
-      case 'high-value-transaction':
-        navigate('/transactions?rule=HIGH_VALUE_TRANSACTION');
-        break;
-      case 'aml-deviation':
-        navigate('/transactions?rule=AML_DEVIATION');
-        break;
-      case 'high-risk-customer':
-        navigate('/transactions?rule=HIGH_RISK_CUSTOMER_TRANSACTION');
-        break;
-      case 'gl-to-customer':
-        navigate('/transactions?rule=GL_TO_CUSTOMER');
-        break;
-      case 'deposit-dormant':
-        navigate('/transactions?rule=DEPOSIT_IN_DORMANT');
-        break;
-      case 'multi-branch':
-        navigate('/transactions?rule=MULTI_BRANCH_CUSTOMER_TRANSACTION');
-        break;
-      default:
-        break;
+  const kpiData = [
+    {
+      title: 'High-Risk Transactions',
+      value: '47',
+      change: '+12%',
+      trend: 'up',
+      icon: AlertTriangle,
+      color: 'red',
+      description: 'Transactions flagged as high-risk',
+      link: '/transactions'
+    },
+    {
+      title: 'AML Deviation',
+      value: '15',
+      change: '+5%',
+      trend: 'up',
+      icon: Shield,
+      color: 'orange',
+      description: 'Anti-Money Laundering violations',
+      link: '/transactions?rule=AML_DEVIATION'
+    },
+    {
+      title: 'Deposit in Dormant',
+      value: '8',
+      change: '+2%',
+      trend: 'up',
+      icon: Clock,
+      color: 'yellow',
+      description: 'Deposits to dormant accounts',
+      link: '/transactions?rule=DEPOSIT_IN_DORMANT'
+    },
+    {
+      title: 'Large Amount',
+      value: '12',
+      change: '+3%',
+      trend: 'up',
+      icon: DollarSign,
+      color: 'blue',
+      description: 'Transactions exceeding thresholds',
+      link: '/transactions?rule=LARGE_AMOUNT'
+    },
+    {
+      title: 'Cross Border',
+      value: '18',
+      change: '+7%',
+      trend: 'up',
+      icon: Globe,
+      color: 'purple',
+      description: 'International transactions',
+      link: '/transactions?rule=CROSS_BORDER'
+    },
+    {
+      title: 'Velocity Check',
+      value: '9',
+      change: '+1%',
+      trend: 'up',
+      icon: TrendingUp,
+      color: 'green',
+      description: 'High-frequency transaction patterns',
+      link: '/transactions?rule=VELOCITY_CHECK'
+    },
+    {
+      title: 'Sanctioned Entity',
+      value: '3',
+      change: '0%',
+      trend: 'neutral',
+      icon: FileText,
+      color: 'red',
+      description: 'Transactions with sanctioned parties',
+      link: '/transactions?rule=SANCTIONED_ENTITY'
+    },
+    {
+      title: 'Unusual Pattern',
+      value: '6',
+      change: '+2%',
+      trend: 'up',
+      icon: Users,
+      color: 'orange',
+      description: 'Irregular transaction behaviors',
+      link: '/transactions?rule=UNUSUAL_PATTERN'
     }
+  ];
+
+  const getColorClasses = (color: string) => {
+    const colorMap: { [key: string]: string } = {
+      red: 'bg-red-900/20 border-red-800 text-red-300',
+      orange: 'bg-orange-900/20 border-orange-800 text-orange-300',
+      yellow: 'bg-yellow-900/20 border-yellow-800 text-yellow-300',
+      blue: 'bg-blue-900/20 border-blue-800 text-blue-300',
+      purple: 'bg-purple-900/20 border-purple-800 text-purple-300',
+      green: 'bg-green-900/20 border-green-800 text-green-300'
+    };
+    return colorMap[color] || colorMap.red;
   };
 
   return (
@@ -68,192 +105,107 @@ const Index = () => {
       
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-slate-900 border-b border-slate-700 px-4 md:px-6 py-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <header className="bg-slate-900 border-b border-slate-700 px-6 py-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-white">Transaction Monitoring Dashboard</h1>
-              <p className="text-slate-400 mt-1 text-sm md:text-base">Real-time compliance monitoring and risk analysis</p>
+              <h1 className="text-2xl font-bold text-white">Financial Crime Detection Dashboard</h1>
+              <p className="text-slate-400 mt-1">Real-time monitoring and risk assessment</p>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <div className="flex items-center space-x-2 bg-slate-800 px-3 py-2 rounded-lg">
-                <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm text-green-400 font-medium">Live Monitoring</span>
-              </div>
-              <div className="text-left sm:text-right">
-                <p className="text-sm text-white font-medium">January 15, 2024</p>
-                <p className="text-xs text-slate-400">Last updated: 2 min ago</p>
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-slate-400">
+                Last updated: {new Date().toLocaleTimeString()}
               </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <div onClick={() => handleCardClick('flagged-transactions')} className="cursor-pointer">
-              <KPICard
-                title="Flagged Transactions"
-                value={mockTransactions.filter(t => t.status === 'flagged').length}
-                change="+12% from yesterday"
-                changeType="negative"
-                icon={AlertTriangle}
-                iconColor="text-red-400"
-                bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('active-cases')} className="cursor-pointer">
-              <KPICard
-                title="Active Cases"
-                value="23"
-                change="+3 new cases"
-                changeType="neutral"
-                icon={FileText}
-                iconColor="text-orange-400"
-                bgColor="bg-gradient-to-br from-orange-900/20 to-orange-800/10 border-orange-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('high-value-transaction')} className="cursor-pointer">
-              <KPICard
-                title="High Value Transaction"
-                value={getTransactionCountForRule('HIGH VALUE TRANSACTION')}
-                change="Latest flagged transactions"
-                changeType="neutral"
-                icon={TrendingUp}
-                iconColor="text-emerald-400"
-                bgColor="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('aml-deviation')} className="cursor-pointer">
-              <KPICard
-                title="AML Deviation"
-                value={getTransactionCountForRule('AML DEVIATION')}
-                change="Compliance violations"
-                changeType="negative"
-                icon={Shield}
-                iconColor="text-purple-400"
-                bgColor="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-800/50"
-              />
-            </div>
+        <main className="flex-1 overflow-y-auto p-6">
+          {/* KPI Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {kpiData.map((kpi, index) => {
+              const IconComponent = kpi.icon;
+              return (
+                <Link
+                  key={index}
+                  to={kpi.link}
+                  className="block hover:scale-105 transition-transform duration-200"
+                >
+                  <div className={`p-6 rounded-xl border ${getColorClasses(kpi.color)} hover:bg-opacity-30 transition-all duration-200`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <IconComponent className="h-8 w-8" />
+                      <div className="text-right">
+                        <div className="text-2xl font-bold">{kpi.value}</div>
+                        <div className={`text-sm ${kpi.trend === 'up' ? 'text-red-400' : kpi.trend === 'down' ? 'text-green-400' : 'text-slate-400'}`}>
+                          {kpi.change}
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{kpi.title}</h3>
+                      <p className="text-sm opacity-80">{kpi.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Rule-based KPI Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <div onClick={() => handleCardClick('high-risk-customer')} className="cursor-pointer">
-              <KPICard
-                title="High Risk Customer Transaction"
-                value={getTransactionCountForRule('HIGH RISK CUSTOMER TRANSACTION')}
-                change="Risk-flagged customers"
-                changeType="negative"
-                icon={UserCheck}
-                iconColor="text-red-400"
-                bgColor="bg-gradient-to-br from-red-900/20 to-red-800/10 border-red-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('gl-to-customer')} className="cursor-pointer">
-              <KPICard
-                title="GL to Customer"
-                value={getTransactionCountForRule('GL TO CUSTOMER')}
-                change="General Ledger transfers"
-                changeType="neutral"
-                icon={CreditCard}
-                iconColor="text-blue-400"
-                bgColor="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('deposit-dormant')} className="cursor-pointer">
-              <KPICard
-                title="Deposit in Dormant"
-                value={getTransactionCountForRule('DEPOSIT IN DORMANT')}
-                change="Inactive account activity"
-                changeType="negative"
-                icon={Banknote}
-                iconColor="text-yellow-400"
-                bgColor="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border-yellow-800/50"
-              />
-            </div>
-            <div onClick={() => handleCardClick('multi-branch')} className="cursor-pointer">
-              <KPICard
-                title="Multi Branch Customer Transaction"
-                value={getTransactionCountForRule('MULTI BRANCH CUSTOMER TRANSACTION')}
-                change="Cross-branch activities"
-                changeType="neutral"
-                icon={Building2}
-                iconColor="text-cyan-400"
-                bgColor="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border-cyan-800/50"
-              />
-            </div>
-          </div>
-
-          {/* Transaction Table - Show only last 5 flagged transactions */}
-          <TransactionTable showOnlyFlagged={true} limit={5} />
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
-            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Alerts</h3>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-red-900/20 border border-red-800 rounded-lg">
+                <Link to="/transactions" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
                   <div className="flex items-center space-x-3">
-                    <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">Suspicious Pattern Detected</p>
-                      <p className="text-xs text-slate-400 truncate">Customer: Ahmed Hassan</p>
-                    </div>
+                    <AlertTriangle className="h-5 w-5 text-red-400" />
+                    <span className="text-white">Review Flagged Transactions</span>
                   </div>
-                  <span className="text-xs text-red-300 flex-shrink-0">2 min ago</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-900/20 border border-yellow-800 rounded-lg">
+                </Link>
+                <Link to="/alerts" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
                   <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5 text-yellow-400 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">Large Transaction Review</p>
-                      <p className="text-xs text-slate-400 truncate">Amount: $125k</p>
-                    </div>
+                    <Shield className="h-5 w-5 text-orange-400" />
+                    <span className="text-white">Manage Active Alerts</span>
                   </div>
-                  <span className="text-xs text-yellow-300 flex-shrink-0">5 min ago</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-orange-900/20 border border-orange-800 rounded-lg">
+                </Link>
+                <Link to="/rules-engine" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
                   <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5 text-orange-400 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">PEP Match Found</p>
-                      <p className="text-xs text-slate-400 truncate">Requires immediate review</p>
-                    </div>
+                    <FileText className="h-5 w-5 text-blue-400" />
+                    <span className="text-white">Configure Detection Rules</span>
                   </div>
-                  <span className="text-xs text-orange-300 flex-shrink-0">12 min ago</span>
-                </div>
+                </Link>
               </div>
             </div>
 
-            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
-              <h3 className="text-lg font-semibold text-white mb-4">Risk Distribution</h3>
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <h2 className="text-xl font-semibold text-white mb-4">System Status</h2>
               <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-slate-300">High Risk (80-100)</span>
-                    <span className="text-sm font-medium text-red-400">15%</span>
-                  </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div className="bg-red-500 h-2 rounded-full" style={{ width: '15%' }}></div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300">Transaction Processing</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-green-400 text-sm">Active</span>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-slate-300">Medium Risk (60-79)</span>
-                    <span className="text-sm font-medium text-yellow-400">35%</span>
-                  </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '35%' }}></div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300">Risk Assessment Engine</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-green-400 text-sm">Active</span>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-slate-300">Low Risk (0-59)</span>
-                    <span className="text-sm font-medium text-green-400">50%</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300">Compliance Monitoring</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-green-400 text-sm">Active</span>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '50%' }}></div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300">Alert Processing</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                    <span className="text-yellow-400 text-sm">Processing</span>
                   </div>
                 </div>
               </div>
