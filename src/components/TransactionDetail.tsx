@@ -12,7 +12,6 @@ import {
   AlertDialogTrigger,
 } from './ui/alert-dialog';
 import { useToast } from './ui/use-toast';
-import Swal from 'sweetalert2';
 
 interface TransactionDetailProps {
   transaction: {
@@ -73,50 +72,6 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onCl
     if (score >= 80) return 'text-red-400';
     if (score >= 60) return 'text-yellow-400';
     return 'text-green-400';
-  };
-
-  const handleActionWithComment = async (actionType: string, actionTitle: string) => {
-    const { value: comment } = await Swal.fire({
-      title: actionTitle,
-      input: 'textarea',
-      inputLabel: `Please provide a comment for this action on transaction ${transaction.id}:`,
-      inputPlaceholder: 'Enter your comment explaining this action...',
-      inputAttributes: {
-        'aria-label': 'Type your comment here'
-      },
-      showCancelButton: true,
-      confirmButtonText: `Confirm ${actionTitle}`,
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      background: '#1e293b',
-      color: '#ffffff',
-      inputValidator: (value) => {
-        if (!value) {
-          return 'You need to provide a comment!'
-        }
-      }
-    });
-
-    if (comment) {
-      console.log(`${actionType} action:`, {
-        transactionId: transaction.id,
-        action: actionType,
-        comment: comment,
-        timestamp: new Date().toISOString(),
-        actionBy: 'Current User'
-      });
-
-      toast({
-        title: `${actionTitle} Completed`,
-        description: `Transaction ${transaction.id} has been ${actionType.toLowerCase()}.`,
-      });
-
-      // Close the modal after successful action
-      setTimeout(() => {
-        onClose();
-      }, 1000);
-    }
   };
 
   const handleBlockTransaction = () => {
@@ -379,34 +334,19 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onCl
 
           {/* Actions */}
           <div className="flex flex-wrap gap-4">
-            <button 
-              onClick={() => handleActionWithComment('FLAGGED_SUSPICIOUS', 'Flag as Suspicious')}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
               Flag as Suspicious
             </button>
-            <button 
-              onClick={() => handleActionWithComment('CLEARED', 'Mark as Clear')}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
               Mark as Clear
             </button>
-            <button 
-              onClick={() => handleActionWithComment('INVESTIGATION_CREATED', 'Create Investigation')}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
               Create Investigation
             </button>
-            <button 
-              onClick={() => handleActionWithComment('ADDED_TO_WATCHLIST', 'Add to Watchlist')}
-              className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors">
               Add to Watchlist
             </button>
-            <button 
-              onClick={() => handleActionWithComment('REPORT_GENERATED', 'Generate Report')}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
               Generate Report
             </button>
             
@@ -450,10 +390,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onCl
               </AlertDialogContent>
             </AlertDialog>
             
-            <button 
-              onClick={() => handleActionWithComment('EXPORTED', 'Export Details')}
-              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-            >
+            <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
               Export Details
             </button>
           </div>
