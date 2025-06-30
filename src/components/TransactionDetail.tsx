@@ -1,6 +1,17 @@
-
-import React from 'react';
-import { X, AlertTriangle, User, Calendar, MapPin, DollarSign, CreditCard, Building, Globe, Clock, Shield, TrendingUp } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, AlertTriangle, User, Calendar, MapPin, DollarSign, CreditCard, Building, Globe, Clock, Shield, TrendingUp, Ban } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './ui/alert-dialog';
+import { useToast } from './ui/use-toast';
 
 interface TransactionDetailProps {
   transaction: {
@@ -19,6 +30,10 @@ interface TransactionDetailProps {
 }
 
 const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onClose }) => {
+  const [blockComment, setBlockComment] = useState('');
+  const [isBlocking, setIsBlocking] = useState(false);
+  const { toast } = useToast();
+
   // Mock additional transaction data for in-depth view
   const detailedTransaction = {
     ...transaction,
@@ -57,6 +72,38 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onCl
     if (score >= 80) return 'text-red-400';
     if (score >= 60) return 'text-yellow-400';
     return 'text-green-400';
+  };
+
+  const handleBlockTransaction = () => {
+    if (!blockComment.trim()) {
+      toast({
+        title: "Comment Required",
+        description: "Please provide a comment explaining why this transaction is being blocked.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsBlocking(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      toast({
+        title: "Transaction Blocked",
+        description: `Transaction ${transaction.id} has been successfully blocked.`,
+      });
+      
+      console.log('Transaction blocked:', {
+        transactionId: transaction.id,
+        comment: blockComment,
+        timestamp: new Date().toISOString(),
+        blockedBy: 'Current User'
+      });
+      
+      setIsBlocking(false);
+      setBlockComment('');
+      onClose();
+    }, 1000);
   };
 
   return (
@@ -302,6 +349,47 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction, onCl
             <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
               Generate Report
             </button>
+            
+            {/* Block Transaction Button with Alert Dialog */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className="px-4 py-2 bg-red-800 hover:bg-red-900 text-white rounded-lg transition-colors flex items-center space-x-2">
+                  <Ban className="h-4 w-4" />
+                  <span>Block Transaction</span>
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-slate-800 border-slate-700">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-white">Block Transaction</AlertDialogTitle>
+                  <AlertDialogDescription className="text-slate-400">
+                    You are about to block transaction {transaction.id}. Please provide a reason for this action.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                
+                <div className="py-4">
+                  <textarea
+                    value={blockComment}
+                    onChange={(e) => setBlockComment(e.target.value)}
+                    placeholder="Enter your comment explaining why this transaction should be blocked..."
+                    className="w-full h-24 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                  />
+                </div>
+                
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-slate-700 text-white hover:bg-slate-600 border-slate-600">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleBlockTransaction}
+                    disabled={isBlocking || !blockComment.trim()}
+                    className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isBlocking ? 'Blocking...' : 'Block Transaction'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            
             <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
               Export Details
             </button>

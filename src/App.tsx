@@ -1,44 +1,37 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Transactions from "./pages/Transactions";
-import TransactionsByRule from "./pages/TransactionsByRule";
-import RulesEngine from "./pages/RulesEngine";
-import Alerts from "./pages/Alerts";
-import CustomerProfiles from "./pages/CustomerProfiles";
-import Reports from "./pages/Reports";
-import Analytics from "./pages/Analytics";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Index from './pages/Index';
+import Transactions from './pages/Transactions';
+import Alerts from './pages/Alerts';
+import CustomerProfiles from './pages/CustomerProfiles';
+import Analytics from './pages/Analytics';
+import Reports from './pages/Reports';
+import RulesEngine from './pages/RulesEngine';
+import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
+import { Toaster } from './components/ui/toaster';
+import './App.css';
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+function App() {
+  return (
+    <Router>
+      <div className="App">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/transactions" element={<Transactions />} />
-          <Route path="/transactions-by-rule" element={<TransactionsByRule />} />
-          <Route path="/rules" element={<RulesEngine />} />
           <Route path="/alerts" element={<Alerts />} />
-          <Route path="/customers" element={<CustomerProfiles />} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/customer-profiles" element={<CustomerProfiles />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/rules-engine" element={<RulesEngine />} />
           <Route path="/settings" element={<Settings />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        <Toaster />
+      </div>
+    </Router>
+  );
+}
 
 export default App;

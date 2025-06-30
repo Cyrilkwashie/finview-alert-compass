@@ -23,21 +23,22 @@ const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('flagged');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [filteredTransactions, setFilteredTransactions] = useState(
-    mockTransactions.filter(t => t.status === 'flagged')
-  );
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   // Filter transactions based on rule parameter
   useEffect(() => {
     let baseData = mockTransactions.filter(t => t.status === 'flagged');
     
     if (ruleFilter) {
+      // Convert the rule filter to match the format in mock data
+      const ruleToMatch = ruleFilter.replace(/_/g, ' ').toUpperCase();
       baseData = baseData.filter(transaction => 
-        transaction.rules.includes(ruleFilter)
+        transaction.rules.some(rule => rule.toUpperCase() === ruleToMatch)
       );
     }
     
     setFilteredTransactions(baseData);
+    console.log('Filtered transactions for rule:', ruleFilter, 'Count:', baseData.length);
   }, [ruleFilter]);
 
   const getStatusIcon = (status: string) => {
@@ -87,8 +88,9 @@ const Transactions = () => {
     
     // Apply rule filter first if it exists
     if (ruleFilter) {
+      const ruleToMatch = ruleFilter.replace(/_/g, ' ').toUpperCase();
       baseData = baseData.filter(transaction => 
-        transaction.rules.includes(ruleFilter)
+        transaction.rules.some(rule => rule.toUpperCase() === ruleToMatch)
       );
     }
     
@@ -107,8 +109,9 @@ const Transactions = () => {
     
     // Apply rule filter first if it exists
     if (ruleFilter) {
+      const ruleToMatch = ruleFilter.replace(/_/g, ' ').toUpperCase();
       baseData = baseData.filter(transaction => 
-        transaction.rules.includes(ruleFilter)
+        transaction.rules.some(rule => rule.toUpperCase() === ruleToMatch)
       );
     }
     
@@ -122,14 +125,14 @@ const Transactions = () => {
 
   const getPageTitle = () => {
     if (ruleFilter) {
-      return `Transactions: ${ruleFilter}`;
+      return `Transactions: ${ruleFilter.replace(/_/g, ' ')}`;
     }
     return 'Flagged Transactions';
   };
 
   const getPageDescription = () => {
     if (ruleFilter) {
-      return `Transactions that triggered the ${ruleFilter} rule`;
+      return `Transactions that triggered the ${ruleFilter.replace(/_/g, ' ')} rule`;
     }
     return 'High-risk transactions requiring attention';
   };

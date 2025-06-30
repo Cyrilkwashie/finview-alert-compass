@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -25,7 +26,8 @@ const Index = () => {
   // Mock function to get transaction count for each rule
   const getTransactionCountForRule = (ruleName: string) => {
     return mockTransactions.filter(transaction => 
-      transaction.rules.includes(ruleName) && transaction.status === 'flagged'
+      transaction.rules.some(rule => rule.toUpperCase() === ruleName.toUpperCase()) && 
+      transaction.status === 'flagged'
     ).length;
   };
 
