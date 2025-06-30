@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { AlertTriangle, TrendingUp, Users, DollarSign, Globe, Shield, Clock, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import TransactionTable from '../components/TransactionTable';
 
 const Index = () => {
   const kpiData = [
@@ -17,7 +19,7 @@ const Index = () => {
     },
     {
       title: 'AML Deviation',
-      value: '15',
+      value: '23',
       change: '+5%',
       trend: 'up',
       icon: Shield,
@@ -27,7 +29,7 @@ const Index = () => {
     },
     {
       title: 'Deposit in Dormant',
-      value: '8',
+      value: '18',
       change: '+2%',
       trend: 'up',
       icon: Clock,
@@ -37,7 +39,7 @@ const Index = () => {
     },
     {
       title: 'Large Amount',
-      value: '12',
+      value: '31',
       change: '+3%',
       trend: 'up',
       icon: DollarSign,
@@ -47,7 +49,7 @@ const Index = () => {
     },
     {
       title: 'Cross Border',
-      value: '18',
+      value: '28',
       change: '+7%',
       trend: 'up',
       icon: Globe,
@@ -57,7 +59,7 @@ const Index = () => {
     },
     {
       title: 'Velocity Check',
-      value: '9',
+      value: '15',
       change: '+1%',
       trend: 'up',
       icon: TrendingUp,
@@ -67,7 +69,7 @@ const Index = () => {
     },
     {
       title: 'Sanctioned Entity',
-      value: '3',
+      value: '7',
       change: '0%',
       trend: 'neutral',
       icon: FileText,
@@ -77,7 +79,7 @@ const Index = () => {
     },
     {
       title: 'Unusual Pattern',
-      value: '6',
+      value: '12',
       change: '+2%',
       trend: 'up',
       icon: Users,
@@ -89,30 +91,54 @@ const Index = () => {
 
   const getColorClasses = (color: string) => {
     const colorMap: { [key: string]: string } = {
-      red: 'bg-red-900/20 border-red-800 text-red-300',
-      orange: 'bg-orange-900/20 border-orange-800 text-orange-300',
-      yellow: 'bg-yellow-900/20 border-yellow-800 text-yellow-300',
-      blue: 'bg-blue-900/20 border-blue-800 text-blue-300',
-      purple: 'bg-purple-900/20 border-purple-800 text-purple-300',
-      green: 'bg-green-900/20 border-green-800 text-green-300'
+      red: 'bg-red-50 border border-red-200 hover:bg-red-100',
+      orange: 'bg-orange-50 border border-orange-200 hover:bg-orange-100',
+      yellow: 'bg-yellow-50 border border-yellow-200 hover:bg-yellow-100',
+      blue: 'bg-blue-50 border border-blue-200 hover:bg-blue-100',
+      purple: 'bg-purple-50 border border-purple-200 hover:bg-purple-100',
+      green: 'bg-green-50 border border-green-200 hover:bg-green-100'
+    };
+    return colorMap[color] || colorMap.red;
+  };
+
+  const getIconColorClasses = (color: string) => {
+    const colorMap: { [key: string]: string } = {
+      red: 'text-red-600',
+      orange: 'text-orange-600',
+      yellow: 'text-yellow-600',
+      blue: 'text-blue-600',
+      purple: 'text-purple-600',
+      green: 'text-green-600'
+    };
+    return colorMap[color] || colorMap.red;
+  };
+
+  const getTextColorClasses = (color: string) => {
+    const colorMap: { [key: string]: string } = {
+      red: 'text-red-900',
+      orange: 'text-orange-900',
+      yellow: 'text-yellow-900',
+      blue: 'text-blue-900',
+      purple: 'text-purple-900',
+      green: 'text-green-900'
     };
     return colorMap[color] || colorMap.red;
   };
 
   return (
-    <div className="flex h-screen bg-slate-950">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-slate-900 border-b border-slate-700 px-6 py-4">
+        <header className="bg-white shadow-sm border-b px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white">Financial Crime Detection Dashboard</h1>
-              <p className="text-slate-400 mt-1">Real-time monitoring and risk assessment</p>
+              <h1 className="text-2xl font-bold text-gray-900">Financial Crime Detection Dashboard</h1>
+              <p className="text-gray-600 mt-1">Real-time monitoring and risk assessment</p>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-slate-400">
+              <div className="text-sm text-gray-500">
                 Last updated: {new Date().toLocaleTimeString()}
               </div>
             </div>
@@ -131,19 +157,19 @@ const Index = () => {
                   to={kpi.link}
                   className="block hover:scale-105 transition-transform duration-200"
                 >
-                  <div className={`p-6 rounded-xl border ${getColorClasses(kpi.color)} hover:bg-opacity-30 transition-all duration-200`}>
+                  <div className={`p-6 rounded-lg ${getColorClasses(kpi.color)} transition-all duration-200`}>
                     <div className="flex items-center justify-between mb-4">
-                      <IconComponent className="h-8 w-8" />
+                      <IconComponent className={`h-8 w-8 ${getIconColorClasses(kpi.color)}`} />
                       <div className="text-right">
-                        <div className="text-2xl font-bold">{kpi.value}</div>
-                        <div className={`text-sm ${kpi.trend === 'up' ? 'text-red-400' : kpi.trend === 'down' ? 'text-green-400' : 'text-slate-400'}`}>
+                        <div className={`text-2xl font-bold ${getTextColorClasses(kpi.color)}`}>{kpi.value}</div>
+                        <div className={`text-sm ${kpi.trend === 'up' ? 'text-red-600' : kpi.trend === 'down' ? 'text-green-600' : 'text-gray-600'}`}>
                           {kpi.change}
                         </div>
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">{kpi.title}</h3>
-                      <p className="text-sm opacity-80">{kpi.description}</p>
+                      <h3 className={`font-semibold mb-1 ${getTextColorClasses(kpi.color)}`}>{kpi.title}</h3>
+                      <p className="text-sm text-gray-600">{kpi.description}</p>
                     </div>
                   </div>
                 </Link>
@@ -151,61 +177,42 @@ const Index = () => {
             })}
           </div>
 
-          {/* Quick Actions */}
+          {/* Bottom Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-              <div className="space-y-3">
-                <Link to="/transactions" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
-                  <div className="flex items-center space-x-3">
-                    <AlertTriangle className="h-5 w-5 text-red-400" />
-                    <span className="text-white">Review Flagged Transactions</span>
-                  </div>
-                </Link>
-                <Link to="/alerts" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
-                  <div className="flex items-center space-x-3">
-                    <Shield className="h-5 w-5 text-orange-400" />
-                    <span className="text-white">Manage Active Alerts</span>
-                  </div>
-                </Link>
-                <Link to="/rules-engine" className="block p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-5 w-5 text-blue-400" />
-                    <span className="text-white">Configure Detection Rules</span>
-                  </div>
-                </Link>
-              </div>
+            {/* Recent Transactions */}
+            <div className="lg:col-span-1">
+              <TransactionTable showOnlyFlagged={true} limit={5} />
             </div>
 
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <h2 className="text-xl font-semibold text-white mb-4">System Status</h2>
+            {/* Risk Distribution */}
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Risk Distribution</h2>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300">Transaction Processing</span>
+                  <span className="text-gray-700">High Risk</span>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400 text-sm">Active</span>
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="bg-red-600 h-2 rounded-full" style={{ width: '75%' }}></div>
+                    </div>
+                    <span className="text-red-600 text-sm font-medium">75%</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300">Risk Assessment Engine</span>
+                  <span className="text-gray-700">Medium Risk</span>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400 text-sm">Active</span>
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '20%' }}></div>
+                    </div>
+                    <span className="text-yellow-600 text-sm font-medium">20%</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300">Compliance Monitoring</span>
+                  <span className="text-gray-700">Low Risk</span>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400 text-sm">Active</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-300">Alert Processing</span>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    <span className="text-yellow-400 text-sm">Processing</span>
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="bg-green-600 h-2 rounded-full" style={{ width: '5%' }}></div>
+                    </div>
+                    <span className="text-green-600 text-sm font-medium">5%</span>
                   </div>
                 </div>
               </div>
